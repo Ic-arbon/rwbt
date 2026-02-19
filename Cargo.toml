@@ -8,8 +8,14 @@ keywords = ["bluetooth", "rivierawaves", "rfc", "embedded"]
 license = "Apache-2.0"
 
 [features]
-default = ["prebuild"]
+default = []
 prebuild = []
-
 ## SiFli RF front-end register offsets, bit constants, and calibration table packing.
 sifli = []
+## Internal: enable the gen-sifli-regs binary tool.
+_gen = []
+
+[[bin]]
+name = "gen-sifli-regs"
+path = "src/bin/gen_sifli_regs.rs"
+required-features = ["_gen"]
