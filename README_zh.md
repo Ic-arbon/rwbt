@@ -10,20 +10,22 @@
 ```
 rwbt/
 ├── src/
-│   ├── common.rs          # Reg<T, A> 寄存器抽象（R / W / RW 权限标记）
-│   ├── mac/               # BT MAC 寄存器块 — 从 YODA CSV 自动生成
+│   ├── common.rs              # Reg<T, A> 寄存器抽象（R / W / RW 权限标记）
+│   ├── mac/                   # BT MAC 寄存器块 — 从 YODA CSV 自动生成
 │   │   ├── mod.rs
-│   │   └── prebuilt.rs    # 17k 行预生成代码，零构建依赖
-│   └── rfc/
-│       ├── cmd.rs          # RFC 命令 ISA（跨厂商通用）
-│       └── sifli/          # SiFli 射频前端
-│           ├── regs.rs     #   寄存器偏移和位常量
-│           └── cal_table.rs#   校准表打包
-├── build.rs               # YODA CSV → Rust 代码生成
+│   │   └── prebuilt.rs        # 17k 行预生成代码，零构建依赖
+│   ├── rfc/
+│   │   ├── cmd.rs             # RFC 命令 ISA（跨厂商通用）
+│   │   └── sifli/             # SiFli 射频前端
+│   │       ├── regs.rs        #   寄存器偏移和位常量（自动生成）
+│   │       └── cal_table.rs   #   校准表打包
+│   └── bin/
+│       └── gen_sifli_regs.rs  # 工具：PAC YAML → regs.rs 代码生成
+├── build.rs                   # YODA CSV → Rust 代码生成
 └── data/
-    ├── RW_DM_CORE_REG.csv # 设备管理寄存器
-    ├── RW_BT_CORE_REG.csv # 经典蓝牙寄存器
-    └── RW_BLE_CORE_REG.csv# BLE 寄存器
+    ├── RW_DM_CORE_REG.csv     # 设备管理寄存器
+    ├── RW_BT_CORE_REG.csv     # 经典蓝牙寄存器
+    └── RW_BLE_CORE_REG.csv    # BLE 寄存器
 ```
 
 ### 跨厂商 vs 厂商专用
@@ -65,18 +67,30 @@ seq.push(cmd::END);
 
 | Feature | 默认 | 说明 |
 |---|---|---|
-| `prebuild` | 是 | 使用预生成的 MAC 寄存器代码（无 build.rs 开销） |
+| `prebuild` | 否 | 使用预生成的 MAC 寄存器代码（跳过 build.rs 代码生成） |
 | `sifli` | 否 | 启用 SiFli 射频前端寄存器常量和校准表打包 |
 
 ### 重新生成 MAC 寄存器代码
 
 ```bash
-# 关闭 prebuild 以触发 CSV → Rust 代码生成
-cargo build --no-default-features
+# 默认即运行 build.rs 从 CSV 生成 MAC 寄存器
+cargo build
 
 # 生成文件位于 $OUT_DIR/mac_generated.rs
 # 复制到 src/mac/prebuilt.rs 以更新提交的预生成版本
 ```
+
+### 重新生成 SiFli RFC 寄存器常量
+
+`src/rfc/sifli/regs.rs` 从 sifli-pac 的 `bt_rfc.yaml`（chiptool 格式）自动生成。
+PAC 更新后重新生成：
+
+```bash
+cargo run --features _gen --bin gen-sifli-regs -- <path-to-bt_rfc.yaml> > src/rfc/sifli/regs.rs
+rustfmt src/rfc/sifli/regs.rs
+```
+
+`_gen` feature 控制该工具的编译，库的使用者不会触发构建。
 
 ## 数据来源
 

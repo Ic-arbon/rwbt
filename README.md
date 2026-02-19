@@ -10,20 +10,22 @@ found in chips from SiFli, Broadcom, Realtek, Beken, and others.
 ```
 rwbt/
 ├── src/
-│   ├── common.rs          # Reg<T, A> register abstraction (R / W / RW)
-│   ├── mac/               # BT MAC register blocks — auto-generated from YODA CSV
+│   ├── common.rs              # Reg<T, A> register abstraction (R / W / RW)
+│   ├── mac/                   # BT MAC register blocks — auto-generated from YODA CSV
 │   │   ├── mod.rs
-│   │   └── prebuilt.rs    # 17k lines, committed for zero-build-dep usage
-│   └── rfc/
-│       ├── cmd.rs          # RFC command ISA (cross-vendor)
-│       └── sifli/          # SiFli RF front-end
-│           ├── regs.rs     #   register offsets & bit constants
-│           └── cal_table.rs#   calibration table packing
-├── build.rs               # YODA CSV → Rust codegen
+│   │   └── prebuilt.rs        # 17k lines, committed for zero-build-dep usage
+│   ├── rfc/
+│   │   ├── cmd.rs             # RFC command ISA (cross-vendor)
+│   │   └── sifli/             # SiFli RF front-end
+│   │       ├── regs.rs        #   register offsets & bit constants (auto-generated)
+│   │       └── cal_table.rs   #   calibration table packing
+│   └── bin/
+│       └── gen_sifli_regs.rs  # Tool: PAC YAML → regs.rs codegen
+├── build.rs                   # YODA CSV → Rust codegen
 └── data/
-    ├── RW_DM_CORE_REG.csv # Device Management registers
-    ├── RW_BT_CORE_REG.csv # Classic BT registers
-    └── RW_BLE_CORE_REG.csv# BLE registers
+    ├── RW_DM_CORE_REG.csv     # Device Management registers
+    ├── RW_BT_CORE_REG.csv     # Classic BT registers
+    └── RW_BLE_CORE_REG.csv    # BLE registers
 ```
 
 ### Cross-vendor vs vendor-specific
@@ -65,18 +67,30 @@ seq.push(cmd::END);
 
 | Feature | Default | Description |
 |---|---|---|
-| `prebuild` | yes | Use pre-generated MAC register code (no build.rs overhead) |
+| `prebuild` | no | Use pre-generated MAC register code (skip build.rs codegen) |
 | `sifli` | no | Enable SiFli RF front-end register constants and calibration tables |
 
 ### Regenerating MAC registers
 
 ```bash
-# Disable prebuild to run the CSV → Rust codegen
-cargo build --no-default-features
+# By default, build.rs generates MAC registers from CSV
+cargo build
 
 # The generated file is at $OUT_DIR/mac_generated.rs
 # Copy it to src/mac/prebuilt.rs to update the committed version
 ```
+
+### Regenerating SiFli RFC registers
+
+`src/rfc/sifli/regs.rs` is auto-generated from the sifli-pac `bt_rfc.yaml`
+(chiptool format). To regenerate after PAC updates:
+
+```bash
+cargo run --features _gen --bin gen-sifli-regs -- <path-to-bt_rfc.yaml> > src/rfc/sifli/regs.rs
+rustfmt src/rfc/sifli/regs.rs
+```
+
+The `_gen` feature gates the binary tool so it is never built by library consumers.
 
 ## Data source
 
