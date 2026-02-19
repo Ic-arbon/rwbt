@@ -6,6 +6,7 @@ description = "RivieraWaves Bluetooth IP core: RFC command sequencer, register d
 categories = ["embedded", "no-std", "hardware-support"]
 keywords = ["bluetooth", "rivierawaves", "rfc", "embedded"]
 license = "Apache-2.0"
+repository = "https://github.com/Ic-arbon/rwbt"
 
 [features]
 default = []
