@@ -1,0 +1,15 @@
+[package]
+name = "rwbt"
+version = "0.1.0"
+edition = "2021"
+description = "RivieraWaves Bluetooth IP core: RFC command sequencer, register definitions, and calibration table packing"
+categories = ["embedded", "no-std", "hardware-support"]
+keywords = ["bluetooth", "rivierawaves", "rfc", "embedded"]
+license = "Apache-2.0"
+
+[features]
+default = ["prebuild"]
+prebuild = []
+
+## SiFli RF front-end register offsets, bit constants, and calibration table packing.
+sifli = []
