@@ -73,6 +73,12 @@ pub struct CmdBuilder {
     len: usize,
 }
 
+impl Default for CmdBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CmdBuilder {
     /// Create a new empty command builder.
     pub const fn new() -> Self {
@@ -91,7 +97,7 @@ impl CmdBuilder {
 
     /// Pad to even length (commands are packed as pairs into 32-bit words).
     pub fn pad_even(&mut self) {
-        if self.len % 2 != 0 {
+        if !self.len.is_multiple_of(2) {
             self.push(END);
         }
     }

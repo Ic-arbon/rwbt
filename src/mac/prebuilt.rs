@@ -14,6 +14,8 @@ pub mod dm {
     unsafe impl Sync for Dm {}
 
     impl Dm {
+        /// # Safety
+        /// `ptr` must point to a valid DM core register block.
         #[inline(always)]
         pub const unsafe fn from_ptr(ptr: *mut ()) -> Self {
             Self {
@@ -289,25 +291,19 @@ pub mod dm {
 
         /// VERSION
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Version(pub u32);
-
-        impl Default for Version {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Version {
             /// BUILD — 8 bits (offset 0)
             #[inline(always)]
             pub const fn build(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_build(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// UPG — 8 bits (offset 8)
@@ -346,14 +342,8 @@ pub mod dm {
 
         /// INTCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intcntl0(pub u32);
-
-        impl Default for Intcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intcntl0 {
             /// ERRORINTMSK — 1 bit (offset 16)
@@ -370,14 +360,8 @@ pub mod dm {
 
         /// INTSTAT0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intstat0(pub u32);
-
-        impl Default for Intstat0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intstat0 {
             /// ERRORINTSTAT — 1 bit (offset 16)
@@ -394,14 +378,8 @@ pub mod dm {
 
         /// INTACK0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intack0(pub u32);
-
-        impl Default for Intack0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intack0 {
             /// ERRORINTACK — 1 bit (offset 16)
@@ -418,25 +396,19 @@ pub mod dm {
 
         /// INTCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intcntl1(pub u32);
-
-        impl Default for Intcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intcntl1 {
             /// CLKNINTMSK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintmsk(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintmsk(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTMSK — 1 bit (offset 1)
@@ -552,25 +524,19 @@ pub mod dm {
 
         /// INTSTAT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intstat1(pub u32);
-
-        impl Default for Intstat1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intstat1 {
             /// CLKNINTSTAT — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintstat(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintstat(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTSTAT — 1 bit (offset 1)
@@ -664,25 +630,19 @@ pub mod dm {
 
         /// INTACK1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intack1(pub u32);
-
-        impl Default for Intack1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intack1 {
             /// CLKNINTACK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintack(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintack(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTACK — 1 bit (offset 1)
@@ -776,25 +736,19 @@ pub mod dm {
 
         /// ACTFIFOSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actfifostat(pub u32);
-
-        impl Default for Actfifostat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actfifostat {
             /// STARTACTINTSTAT — 1 bit (offset 0)
             #[inline(always)]
             pub const fn startactintstat(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_startactintstat(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// ENDACTINTSTAT — 1 bit (offset 1)
@@ -899,49 +853,37 @@ pub mod dm {
 
         /// ETPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Etptr(pub u32);
-
-        impl Default for Etptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Etptr {
             /// ETPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn etptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_etptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// DEEPSLCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslcntl(pub u32);
-
-        impl Default for Deepslcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslcntl {
             /// OSC_SLEEP_EN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn osc_sleep_en(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_osc_sleep_en(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// RADIO_SLEEP_EN — 1 bit (offset 1)
@@ -1002,14 +944,8 @@ pub mod dm {
 
         /// DEEPSLWKUP
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslwkup(pub u32);
-
-        impl Default for Deepslwkup {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslwkup {
             /// DEEPSLTIME — 32 bits (offset 0)
@@ -1026,14 +962,8 @@ pub mod dm {
 
         /// DEEPSLSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslstat(pub u32);
-
-        impl Default for Deepslstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslstat {
             /// DEEPSLDUR — 32 bits (offset 0)
@@ -1050,25 +980,19 @@ pub mod dm {
 
         /// ENBPRESET
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Enbpreset(pub u32);
-
-        impl Default for Enbpreset {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Enbpreset {
             /// TWRM — 10 bits (offset 0)
             #[inline(always)]
             pub const fn twrm(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_twrm(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
 
             /// TWOSC — 11 bits (offset 10)
@@ -1096,49 +1020,37 @@ pub mod dm {
 
         /// FINECNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finecntcorr(pub u32);
-
-        impl Default for Finecntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finecntcorr {
             /// FINECNTCORR — 10 bits (offset 0)
             #[inline(always)]
             pub const fn finecntcorr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_finecntcorr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNCNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkncntcorr(pub u32);
-
-        impl Default for Clkncntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkncntcorr {
             /// CLKNCNTCORR — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkncntcorr(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkncntcorr(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
 
             /// ABS_DELTA — 1 bit (offset 31)
@@ -1155,25 +1067,19 @@ pub mod dm {
 
         /// DIAGCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Diagcntl(pub u32);
-
-        impl Default for Diagcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Diagcntl {
             /// DIAG0 — 6 bits (offset 0)
             #[inline(always)]
             pub const fn diag0(&self) -> u8 {
-                ((self.0 >> 0) & 0x3F) as u8
+                (self.0 & 0x3F) as u8
             }
 
             #[inline(always)]
             pub fn set_diag0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3F << 0)) | ((val as u32 & 0x3F) << 0);
+                self.0 = (self.0 & !0x3F) | (val as u32 & 0x3F);
             }
 
             /// DIAG0_EN — 1 bit (offset 7)
@@ -1256,25 +1162,19 @@ pub mod dm {
 
         /// DIAGSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Diagstat(pub u32);
-
-        impl Default for Diagstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Diagstat {
             /// DIAG0STAT — 8 bits (offset 0)
             #[inline(always)]
             pub const fn diag0stat(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_diag0stat(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// DIAG1STAT — 8 bits (offset 8)
@@ -1313,25 +1213,19 @@ pub mod dm {
 
         /// DEBUGADDMAX
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Debugaddmax(pub u32);
-
-        impl Default for Debugaddmax {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Debugaddmax {
             /// EM_ADDMAX — 16 bits (offset 0)
             #[inline(always)]
             pub const fn em_addmax(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_em_addmax(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// REG_ADDMAX — 16 bits (offset 16)
@@ -1348,25 +1242,19 @@ pub mod dm {
 
         /// DEBUGADDMIN
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Debugaddmin(pub u32);
-
-        impl Default for Debugaddmin {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Debugaddmin {
             /// EM_ADDMIN — 16 bits (offset 0)
             #[inline(always)]
             pub const fn em_addmin(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_em_addmin(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// REG_ADDMIN — 16 bits (offset 16)
@@ -1383,25 +1271,19 @@ pub mod dm {
 
         /// ERRORTYPESTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Errortypestat(pub u32);
-
-        impl Default for Errortypestat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Errortypestat {
             /// RADIO_EMACC_ERROR — 1 bit (offset 0)
             #[inline(always)]
             pub const fn radio_emacc_error(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_radio_emacc_error(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// FIFOWRITEERR — 1 bit (offset 1)
@@ -1440,25 +1322,19 @@ pub mod dm {
 
         /// SWPROFILING
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Swprofiling(pub u32);
-
-        impl Default for Swprofiling {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Swprofiling {
             /// SWPROF0 — 1 bit (offset 0)
             #[inline(always)]
             pub const fn swprof0(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_swprof0(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SWPROF1 — 1 bit (offset 1)
@@ -1805,14 +1681,8 @@ pub mod dm {
 
         /// RADIOCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl0(pub u32);
-
-        impl Default for Radiocntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl0 {
             /// SPICOMP — 1 bit (offset 1)
@@ -1862,25 +1732,19 @@ pub mod dm {
 
         /// RADIOCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl1(pub u32);
-
-        impl Default for Radiocntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl1 {
             /// SUBVERSION — 4 bits (offset 0)
             #[inline(always)]
             pub const fn subversion(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_subversion(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// XRFSEL — 6 bits (offset 4)
@@ -1996,25 +1860,19 @@ pub mod dm {
 
         /// AESCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aescntl(pub u32);
-
-        impl Default for Aescntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aescntl {
             /// AES_START — 1 bit (offset 0)
             #[inline(always)]
             pub const fn aes_start(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_aes_start(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// AES_MODE — 1 bit (offset 1)
@@ -2031,14 +1889,8 @@ pub mod dm {
 
         /// AESKEY31_0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey310(pub u32);
-
-        impl Default for Aeskey310 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey310 {
             /// AESKEY31_0 — 32 bits (offset 0)
@@ -2055,14 +1907,8 @@ pub mod dm {
 
         /// AESKEY63_32
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey6332(pub u32);
-
-        impl Default for Aeskey6332 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey6332 {
             /// AESKEY63_32 — 32 bits (offset 0)
@@ -2079,14 +1925,8 @@ pub mod dm {
 
         /// AESKEY95_64
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey9564(pub u32);
-
-        impl Default for Aeskey9564 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey9564 {
             /// AESKEY95_64 — 32 bits (offset 0)
@@ -2103,14 +1943,8 @@ pub mod dm {
 
         /// AESKEY127_96
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey12796(pub u32);
-
-        impl Default for Aeskey12796 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey12796 {
             /// AESKEY127_96 — 32 bits (offset 0)
@@ -2127,38 +1961,26 @@ pub mod dm {
 
         /// AESPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aesptr(pub u32);
-
-        impl Default for Aesptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aesptr {
             /// AESPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn aesptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_aesptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// TXMICVAL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Txmicval(pub u32);
-
-        impl Default for Txmicval {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Txmicval {
             /// TXMICVAL — 32 bits (offset 0)
@@ -2175,14 +1997,8 @@ pub mod dm {
 
         /// RXMICVAL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rxmicval(pub u32);
-
-        impl Default for Rxmicval {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rxmicval {
             /// RXMICVAL — 32 bits (offset 0)
@@ -2199,25 +2015,19 @@ pub mod dm {
 
         /// TIMGENCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Timgencntl(pub u32);
-
-        impl Default for Timgencntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Timgencntl {
             /// PREFETCH_TIME — 9 bits (offset 0)
             #[inline(always)]
             pub const fn prefetch_time(&self) -> u16 {
-                ((self.0 >> 0) & 0x1FF) as u16
+                (self.0 & 0x1FF) as u16
             }
 
             #[inline(always)]
             pub fn set_prefetch_time(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x1FF << 0)) | ((val as u32 & 0x1FF) << 0);
+                self.0 = (self.0 & !0x1FF) | (val as u32 & 0x1FF);
             }
 
             /// PREFETCHABORT_TIME — 10 bits (offset 16)
@@ -2234,193 +2044,145 @@ pub mod dm {
 
         /// FINETIMTGT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finetimtgt(pub u32);
-
-        impl Default for Finetimtgt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finetimtgt {
             /// FINETARGET — 28 bits (offset 0)
             #[inline(always)]
             pub const fn finetarget(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_finetarget(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// CLKNTGT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt1(pub u32);
-
-        impl Default for Clkntgt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt1 {
             /// CLKNTGT1 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt1(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt1(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt1(pub u32);
-
-        impl Default for Hmicrosectgt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt1 {
             /// HMICROSECTGT1 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt1(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNTGT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt2(pub u32);
-
-        impl Default for Clkntgt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt2 {
             /// CLKNTGT2 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt2(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt2(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt2(pub u32);
-
-        impl Default for Hmicrosectgt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt2 {
             /// HMICROSECTGT2 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt2(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt2(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNTGT3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt3(pub u32);
-
-        impl Default for Clkntgt3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt3 {
             /// CLKNTGT3 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt3(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt3(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt3(pub u32);
-
-        impl Default for Hmicrosectgt3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt3 {
             /// HMICROSECTGT3 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt3(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// SLOTCLK
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Slotclk(pub u32);
-
-        impl Default for Slotclk {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Slotclk {
             /// SCLK — 28 bits (offset 0)
             #[inline(always)]
             pub const fn sclk(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_sclk(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
 
             /// CLKN_UPD — 1 bit (offset 30)
@@ -2448,49 +2210,37 @@ pub mod dm {
 
         /// FINETIMECNT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finetimecnt(pub u32);
-
-        impl Default for Finetimecnt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finetimecnt {
             /// FINECNT — 10 bits (offset 0)
             #[inline(always)]
             pub const fn finecnt(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_finecnt(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ACTSCHCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actschcntl(pub u32);
-
-        impl Default for Actschcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actschcntl {
             /// ENTRY_IDX — 4 bits (offset 0)
             #[inline(always)]
             pub const fn entry_idx(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_entry_idx(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// START_ACT — 1 bit (offset 31)
@@ -2507,25 +2257,19 @@ pub mod dm {
 
         /// DFANCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfancntl(pub u32);
-
-        impl Default for Dfancntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfancntl {
             /// LETXPRIMANTID — 7 bits (offset 0)
             #[inline(always)]
             pub const fn letxprimantid(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_letxprimantid(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// LETXPRIMIDCNTLEN — 1 bit (offset 7)
@@ -2622,6 +2366,8 @@ pub mod bt {
     unsafe impl Sync for Bt {}
 
     impl Bt {
+        /// # Safety
+        /// `ptr` must point to a valid BT core register block.
         #[inline(always)]
         pub const unsafe fn from_ptr(ptr: *mut ()) -> Self {
             Self {
@@ -3473,25 +3219,19 @@ pub mod bt {
 
         /// RWBTCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rwbtcntl(pub u32);
-
-        impl Default for Rwbtcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rwbtcntl {
             /// NWINSIZE — 6 bits (offset 0)
             #[inline(always)]
             pub const fn nwinsize(&self) -> u8 {
-                ((self.0 >> 0) & 0x3F) as u8
+                (self.0 & 0x3F) as u8
             }
 
             #[inline(always)]
             pub fn set_nwinsize(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3F << 0)) | ((val as u32 & 0x3F) << 0);
+                self.0 = (self.0 & !0x3F) | (val as u32 & 0x3F);
             }
 
             /// RWBTEN — 1 bit (offset 8)
@@ -3673,25 +3413,19 @@ pub mod bt {
 
         /// VERSION
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Version(pub u32);
-
-        impl Default for Version {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Version {
             /// BUILD — 8 bits (offset 0)
             #[inline(always)]
             pub const fn build(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_build(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// UPG — 8 bits (offset 8)
@@ -3730,25 +3464,19 @@ pub mod bt {
 
         /// RWBTCONF
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rwbtconf(pub u32);
-
-        impl Default for Rwbtconf {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rwbtconf {
             /// ADDR_WIDTH — 5 bits (offset 0)
             #[inline(always)]
             pub const fn addr_width(&self) -> u8 {
-                ((self.0 >> 0) & 0x1F) as u8
+                (self.0 & 0x1F) as u8
             }
 
             #[inline(always)]
             pub fn set_addr_width(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x1F << 0)) | ((val as u32 & 0x1F) << 0);
+                self.0 = (self.0 & !0x1F) | (val as u32 & 0x1F);
             }
 
             /// BUS_TYPE — 1 bit (offset 6)
@@ -3908,25 +3636,19 @@ pub mod bt {
 
         /// INTCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intcntl0(pub u32);
-
-        impl Default for Intcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intcntl0 {
             /// STARTFRMINTMSK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn startfrmintmsk(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_startfrmintmsk(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// ENDFRMINTMSK — 1 bit (offset 1)
@@ -4064,14 +3786,8 @@ pub mod bt {
 
         /// INTSTAT0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intstat0(pub u32);
-
-        impl Default for Intstat0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intstat0 {
             /// FRSYNCINTSTAT — 1 bit (offset 8)
@@ -4176,14 +3892,8 @@ pub mod bt {
 
         /// INTACK0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intack0(pub u32);
-
-        impl Default for Intack0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intack0 {
             /// FRSYNCINTACK — 1 bit (offset 8)
@@ -4288,25 +3998,19 @@ pub mod bt {
 
         /// INTCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intcntl1(pub u32);
-
-        impl Default for Intcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intcntl1 {
             /// CLKNINTMSK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintmsk(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintmsk(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTMSK — 1 bit (offset 1)
@@ -4422,25 +4126,19 @@ pub mod bt {
 
         /// INTSTAT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intstat1(pub u32);
-
-        impl Default for Intstat1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intstat1 {
             /// CLKNINTSTAT — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintstat(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintstat(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTSTAT — 1 bit (offset 1)
@@ -4534,25 +4232,19 @@ pub mod bt {
 
         /// INTACK1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intack1(pub u32);
-
-        impl Default for Intack1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intack1 {
             /// CLKNINTACK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintack(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintack(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTACK — 1 bit (offset 1)
@@ -4646,25 +4338,19 @@ pub mod bt {
 
         /// ACTFIFOSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actfifostat(pub u32);
-
-        impl Default for Actfifostat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actfifostat {
             /// STARTACTINTSTAT — 1 bit (offset 0)
             #[inline(always)]
             pub const fn startactintstat(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_startactintstat(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// ENDACTINTSTAT — 1 bit (offset 1)
@@ -4736,73 +4422,55 @@ pub mod bt {
 
         /// CURRENTRXDESCPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Currentrxdescptr(pub u32);
-
-        impl Default for Currentrxdescptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Currentrxdescptr {
             /// CURRENTRXDESCPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn currentrxdescptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_currentrxdescptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// ETPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Etptr(pub u32);
-
-        impl Default for Etptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Etptr {
             /// ETPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn etptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_etptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// DEEPSLCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslcntl(pub u32);
-
-        impl Default for Deepslcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslcntl {
             /// OSC_SLEEP_EN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn osc_sleep_en(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_osc_sleep_en(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// RADIO_SLEEP_EN — 1 bit (offset 1)
@@ -4863,14 +4531,8 @@ pub mod bt {
 
         /// DEEPSLWKUP
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslwkup(pub u32);
-
-        impl Default for Deepslwkup {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslwkup {
             /// DEEPSLTIME — 32 bits (offset 0)
@@ -4887,14 +4549,8 @@ pub mod bt {
 
         /// DEEPSLSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslstat(pub u32);
-
-        impl Default for Deepslstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslstat {
             /// DEEPSLDUR — 32 bits (offset 0)
@@ -4911,25 +4567,19 @@ pub mod bt {
 
         /// ENBPRESET
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Enbpreset(pub u32);
-
-        impl Default for Enbpreset {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Enbpreset {
             /// TWRM — 10 bits (offset 0)
             #[inline(always)]
             pub const fn twrm(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_twrm(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
 
             /// TWOSC — 11 bits (offset 10)
@@ -4957,49 +4607,37 @@ pub mod bt {
 
         /// FINECNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finecntcorr(pub u32);
-
-        impl Default for Finecntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finecntcorr {
             /// FINECNTCORR — 10 bits (offset 0)
             #[inline(always)]
             pub const fn finecntcorr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_finecntcorr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNCNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkncntcorr(pub u32);
-
-        impl Default for Clkncntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkncntcorr {
             /// CLKNCNTCORR — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkncntcorr(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkncntcorr(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
 
             /// ABS_DELTA — 1 bit (offset 31)
@@ -5016,25 +4654,19 @@ pub mod bt {
 
         /// DIAGCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Diagcntl(pub u32);
-
-        impl Default for Diagcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Diagcntl {
             /// DIAG0 — 7 bits (offset 0)
             #[inline(always)]
             pub const fn diag0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_diag0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// DIAG0_EN — 1 bit (offset 7)
@@ -5117,25 +4749,19 @@ pub mod bt {
 
         /// DIAGSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Diagstat(pub u32);
-
-        impl Default for Diagstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Diagstat {
             /// DIAG0STAT — 8 bits (offset 0)
             #[inline(always)]
             pub const fn diag0stat(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_diag0stat(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// DIAG1STAT — 8 bits (offset 8)
@@ -5174,25 +4800,19 @@ pub mod bt {
 
         /// DEBUGADDMAX
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Debugaddmax(pub u32);
-
-        impl Default for Debugaddmax {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Debugaddmax {
             /// EM_ADDMAX — 16 bits (offset 0)
             #[inline(always)]
             pub const fn em_addmax(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_em_addmax(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// REG_ADDMAX — 16 bits (offset 16)
@@ -5209,25 +4829,19 @@ pub mod bt {
 
         /// DEBUGADDMIN
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Debugaddmin(pub u32);
-
-        impl Default for Debugaddmin {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Debugaddmin {
             /// EM_ADDMIN — 16 bits (offset 0)
             #[inline(always)]
             pub const fn em_addmin(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_em_addmin(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// REG_ADDMIN — 16 bits (offset 16)
@@ -5244,25 +4858,19 @@ pub mod bt {
 
         /// ERRORTYPESTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Errortypestat(pub u32);
-
-        impl Default for Errortypestat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Errortypestat {
             /// TXCRYPT_ERROR — 1 bit (offset 0)
             #[inline(always)]
             pub const fn txcrypt_error(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_txcrypt_error(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// RXCRYPT_ERROR — 1 bit (offset 1)
@@ -5521,25 +5129,19 @@ pub mod bt {
 
         /// SWPROFILING
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Swprofiling(pub u32);
-
-        impl Default for Swprofiling {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Swprofiling {
             /// SWPROF0 — 1 bit (offset 0)
             #[inline(always)]
             pub const fn swprof0(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_swprof0(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SWPROF1 — 1 bit (offset 1)
@@ -5886,14 +5488,8 @@ pub mod bt {
 
         /// RADIOCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl0(pub u32);
-
-        impl Default for Radiocntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl0 {
             /// SPICOMP — 1 bit (offset 1)
@@ -5943,25 +5539,19 @@ pub mod bt {
 
         /// RADIOCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl1(pub u32);
-
-        impl Default for Radiocntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl1 {
             /// SUBVERSION — 4 bits (offset 0)
             #[inline(always)]
             pub const fn subversion(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_subversion(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// XRFSEL — 6 bits (offset 4)
@@ -6077,25 +5667,19 @@ pub mod bt {
 
         /// RADIOCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl2(pub u32);
-
-        impl Default for Radiocntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl2 {
             /// FREQTABLE_PTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn freqtable_ptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_freqtable_ptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// SYNCERR — 4 bits (offset 16)
@@ -6123,25 +5707,19 @@ pub mod bt {
 
         /// RADIOCNTL3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl3(pub u32);
-
-        impl Default for Radiocntl3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl3 {
             /// TXVALID_BEH — 2 bits (offset 0)
             #[inline(always)]
             pub const fn txvalid_beh(&self) -> u8 {
-                ((self.0 >> 0) & 0x3) as u8
+                (self.0 & 0x3) as u8
             }
 
             #[inline(always)]
             pub fn set_txvalid_beh(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3 << 0)) | ((val as u32 & 0x3) << 0);
+                self.0 = (self.0 & !0x3) | (val as u32 & 0x3);
             }
 
             /// TX_SERPAR_IF — 1 bit (offset 2)
@@ -6268,25 +5846,19 @@ pub mod bt {
 
         /// RADIOPWRUPDN
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiopwrupdn(pub u32);
-
-        impl Default for Radiopwrupdn {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiopwrupdn {
             /// TXPWRUPCT — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txpwrupct(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txpwrupct(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// TXPWRDNCT — 7 bits (offset 8)
@@ -6314,25 +5886,19 @@ pub mod bt {
 
         /// RADIOTXRXTIM
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiotxrxtim(pub u32);
-
-        impl Default for Radiotxrxtim {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiotxrxtim {
             /// TXPATHDLY — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txpathdly(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txpathdly(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// RXPATHDLY — 7 bits (offset 8)
@@ -6360,25 +5926,19 @@ pub mod bt {
 
         /// SPIPTRCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl0(pub u32);
-
-        impl Default for Spiptrcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl0 {
             /// TXONPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn txonptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_txonptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// TXOFFPTR — 14 bits (offset 16)
@@ -6395,25 +5955,19 @@ pub mod bt {
 
         /// SPIPTRCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl1(pub u32);
-
-        impl Default for Spiptrcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl1 {
             /// RXONPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn rxonptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_rxonptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// RXOFFPTR — 14 bits (offset 16)
@@ -6430,25 +5984,19 @@ pub mod bt {
 
         /// SPIPTRCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl2(pub u32);
-
-        impl Default for Spiptrcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl2 {
             /// RSSIPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn rssiptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_rssiptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// RXLENGTHPTR — 14 bits (offset 16)
@@ -6465,49 +6013,37 @@ pub mod bt {
 
         /// SPIPTRCNTL3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl3(pub u32);
-
-        impl Default for Spiptrcntl3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl3 {
             /// RXPKTTYPPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn rxpkttypptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_rxpkttypptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// AESCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aescntl(pub u32);
-
-        impl Default for Aescntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aescntl {
             /// AES_START — 1 bit (offset 0)
             #[inline(always)]
             pub const fn aes_start(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_aes_start(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// AES_MODE — 1 bit (offset 1)
@@ -6524,14 +6060,8 @@ pub mod bt {
 
         /// AESKEY31_0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey310(pub u32);
-
-        impl Default for Aeskey310 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey310 {
             /// AESKEY31_0 — 32 bits (offset 0)
@@ -6548,14 +6078,8 @@ pub mod bt {
 
         /// AESKEY63_32
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey6332(pub u32);
-
-        impl Default for Aeskey6332 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey6332 {
             /// AESKEY63_32 — 32 bits (offset 0)
@@ -6572,14 +6096,8 @@ pub mod bt {
 
         /// AESKEY95_64
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey9564(pub u32);
-
-        impl Default for Aeskey9564 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey9564 {
             /// AESKEY95_64 — 32 bits (offset 0)
@@ -6596,14 +6114,8 @@ pub mod bt {
 
         /// AESKEY127_96
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey12796(pub u32);
-
-        impl Default for Aeskey12796 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey12796 {
             /// AESKEY127_96 — 32 bits (offset 0)
@@ -6620,38 +6132,26 @@ pub mod bt {
 
         /// AESPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aesptr(pub u32);
-
-        impl Default for Aesptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aesptr {
             /// AESPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn aesptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_aesptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// TXMICVAL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Txmicval(pub u32);
-
-        impl Default for Txmicval {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Txmicval {
             /// TXMICVAL — 32 bits (offset 0)
@@ -6668,14 +6168,8 @@ pub mod bt {
 
         /// RXMICVAL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rxmicval(pub u32);
-
-        impl Default for Rxmicval {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rxmicval {
             /// RXMICVAL — 32 bits (offset 0)
@@ -6692,14 +6186,8 @@ pub mod bt {
 
         /// RFTESTCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftestcntl(pub u32);
-
-        impl Default for Rftestcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftestcntl {
             /// TXPKTCNTEN — 1 bit (offset 11)
@@ -6804,25 +6292,19 @@ pub mod bt {
 
         /// RFTESTFREQ
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftestfreq(pub u32);
-
-        impl Default for Rftestfreq {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftestfreq {
             /// TXFREQ — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txfreq(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txfreq(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// RXFREQ — 7 bits (offset 8)
@@ -6872,14 +6354,8 @@ pub mod bt {
 
         /// RFTESTTXSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftesttxstat(pub u32);
-
-        impl Default for Rftesttxstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftesttxstat {
             /// TXPKTCNT — 32 bits (offset 0)
@@ -6896,14 +6372,8 @@ pub mod bt {
 
         /// RFTESTRXSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftestrxstat(pub u32);
-
-        impl Default for Rftestrxstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftestrxstat {
             /// RXPKTCNT — 32 bits (offset 0)
@@ -6920,25 +6390,19 @@ pub mod bt {
 
         /// TIMGENCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Timgencntl(pub u32);
-
-        impl Default for Timgencntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Timgencntl {
             /// PREFETCH_TIME — 9 bits (offset 0)
             #[inline(always)]
             pub const fn prefetch_time(&self) -> u16 {
-                ((self.0 >> 0) & 0x1FF) as u16
+                (self.0 & 0x1FF) as u16
             }
 
             #[inline(always)]
             pub fn set_prefetch_time(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x1FF << 0)) | ((val as u32 & 0x1FF) << 0);
+                self.0 = (self.0 & !0x1FF) | (val as u32 & 0x1FF);
             }
 
             /// PREFETCHABORT_TIME — 10 bits (offset 16)
@@ -6955,193 +6419,145 @@ pub mod bt {
 
         /// FINETIMTGT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finetimtgt(pub u32);
-
-        impl Default for Finetimtgt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finetimtgt {
             /// FINETARGET — 28 bits (offset 0)
             #[inline(always)]
             pub const fn finetarget(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_finetarget(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// CLKNTGT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt1(pub u32);
-
-        impl Default for Clkntgt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt1 {
             /// CLKNTGT1 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt1(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt1(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt1(pub u32);
-
-        impl Default for Hmicrosectgt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt1 {
             /// HMICROSECTGT1 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt1(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNTGT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt2(pub u32);
-
-        impl Default for Clkntgt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt2 {
             /// CLKNTGT2 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt2(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt2(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt2(pub u32);
-
-        impl Default for Hmicrosectgt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt2 {
             /// HMICROSECTGT2 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt2(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt2(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNTGT3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt3(pub u32);
-
-        impl Default for Clkntgt3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt3 {
             /// CLKNTGT3 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt3(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt3(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt3(pub u32);
-
-        impl Default for Hmicrosectgt3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt3 {
             /// HMICROSECTGT3 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt3(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// SLOTCLK
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Slotclk(pub u32);
-
-        impl Default for Slotclk {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Slotclk {
             /// SCLK — 28 bits (offset 0)
             #[inline(always)]
             pub const fn sclk(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_sclk(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
 
             /// CLKN_UPD — 1 bit (offset 30)
@@ -7169,49 +6585,37 @@ pub mod bt {
 
         /// FINETIMECNT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finetimecnt(pub u32);
-
-        impl Default for Finetimecnt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finetimecnt {
             /// FINECNT — 10 bits (offset 0)
             #[inline(always)]
             pub const fn finecnt(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_finecnt(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ACTSCHCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actschcntl(pub u32);
-
-        impl Default for Actschcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actschcntl {
             /// ENTRY_IDX — 4 bits (offset 0)
             #[inline(always)]
             pub const fn entry_idx(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_entry_idx(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// START_ACT — 1 bit (offset 31)
@@ -7228,169 +6632,127 @@ pub mod bt {
 
         /// STARTFRMCLKNTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Startfrmclknts(pub u32);
-
-        impl Default for Startfrmclknts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Startfrmclknts {
             /// STARTFRMCLKNTS — 28 bits (offset 0)
             #[inline(always)]
             pub const fn startfrmclknts(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_startfrmclknts(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// STARTFRMFINECNTTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Startfrmfinecntts(pub u32);
-
-        impl Default for Startfrmfinecntts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Startfrmfinecntts {
             /// STARTFRMFINECNTTS — 10 bits (offset 0)
             #[inline(always)]
             pub const fn startfrmfinecntts(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_startfrmfinecntts(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ENDFRMCLKNTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Endfrmclknts(pub u32);
-
-        impl Default for Endfrmclknts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Endfrmclknts {
             /// ENDFRMCLKNTS — 28 bits (offset 0)
             #[inline(always)]
             pub const fn endfrmclknts(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_endfrmclknts(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// ENDFRMFINECNTTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Endfrmfinecntts(pub u32);
-
-        impl Default for Endfrmfinecntts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Endfrmfinecntts {
             /// ENDFRMFINECNTTS — 10 bits (offset 0)
             #[inline(always)]
             pub const fn endfrmfinecntts(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_endfrmfinecntts(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// SKIPFRMCLKNTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Skipfrmclknts(pub u32);
-
-        impl Default for Skipfrmclknts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Skipfrmclknts {
             /// SKIPFRMPCLKNTS — 28 bits (offset 0)
             #[inline(always)]
             pub const fn skipfrmpclknts(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_skipfrmpclknts(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// SKIPFRMFINECNTTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Skipfrmfinecntts(pub u32);
-
-        impl Default for Skipfrmfinecntts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Skipfrmfinecntts {
             /// SKIPFRMFINECNTTS — 10 bits (offset 0)
             #[inline(always)]
             pub const fn skipfrmfinecntts(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_skipfrmfinecntts(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ABTRAINCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Abtraincntl(pub u32);
-
-        impl Default for Abtraincntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Abtraincntl {
             /// ABTINQTIME — 11 bits (offset 0)
             #[inline(always)]
             pub const fn abtinqtime(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_abtinqtime(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
 
             /// ABTINQLOAD — 1 bit (offset 12)
@@ -7473,25 +6835,19 @@ pub mod bt {
 
         /// EDRCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Edrcntl(pub u32);
-
-        impl Default for Edrcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Edrcntl {
             /// RXGRD_TIMEOUT — 6 bits (offset 0)
             #[inline(always)]
             pub const fn rxgrd_timeout(&self) -> u8 {
-                ((self.0 >> 0) & 0x3F) as u8
+                (self.0 & 0x3F) as u8
             }
 
             #[inline(always)]
             pub fn set_rxgrd_timeout(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3F << 0)) | ((val as u32 & 0x3F) << 0);
+                self.0 = (self.0 & !0x3F) | (val as u32 & 0x3F);
             }
 
             /// GB_TXQUAL_GEN_DSB — 1 bit (offset 6)
@@ -7574,25 +6930,19 @@ pub mod bt {
 
         /// PCACNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcacntl0(pub u32);
-
-        impl Default for Pcacntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcacntl0 {
             /// PHASE_SHIFT_EN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn phase_shift_en(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_phase_shift_en(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SYNC_SOURCE — 1 bit (offset 1)
@@ -7664,25 +7014,19 @@ pub mod bt {
 
         /// PCACNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcacntl1(pub u32);
-
-        impl Default for Pcacntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcacntl1 {
             /// CLOCK_SHIFT — 11 bits (offset 0)
             #[inline(always)]
             pub const fn clock_shift(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_clock_shift(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
 
             /// CLOCK_SHIFT_EN — 1 bit (offset 12)
@@ -7710,25 +7054,19 @@ pub mod bt {
 
         /// PCASTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcastat(pub u32);
-
-        impl Default for Pcastat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcastat {
             /// MOMENT_OFFSET — 11 bits (offset 0)
             #[inline(always)]
             pub const fn moment_offset(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_moment_offset(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
 
             /// SHIFT_PHASE — 11 bits (offset 16)
@@ -7745,25 +7083,19 @@ pub mod bt {
 
         /// COEXIFCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Coexifcntl0(pub u32);
-
-        impl Default for Coexifcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Coexifcntl0 {
             /// WLANCOEX_EN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn wlancoex_en(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_wlancoex_en(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SYNCGEN_EN — 1 bit (offset 1)
@@ -7923,25 +7255,19 @@ pub mod bt {
 
         /// COEXIFCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Coexifcntl1(pub u32);
-
-        impl Default for Coexifcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Coexifcntl1 {
             /// WLCPDELAY — 7 bits (offset 0)
             #[inline(always)]
             pub const fn wlcpdelay(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_wlcpdelay(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// WLCPDURATION — 7 bits (offset 8)
@@ -7980,25 +7306,19 @@ pub mod bt {
 
         /// COEXIFCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Coexifcntl2(pub u32);
-
-        impl Default for Coexifcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Coexifcntl2 {
             /// TX_ANT_DELAY — 4 bits (offset 0)
             #[inline(always)]
             pub const fn tx_ant_delay(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_tx_ant_delay(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// RX_ANT_DELAY — 4 bits (offset 8)
@@ -8015,25 +7335,19 @@ pub mod bt {
 
         /// BTMPRIO0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Btmprio0(pub u32);
-
-        impl Default for Btmprio0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Btmprio0 {
             /// BTM0 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn btm0(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_btm0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// BTM1 — 4 bits (offset 4)
@@ -8116,25 +7430,19 @@ pub mod bt {
 
         /// BTMPRIO1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Btmprio1(pub u32);
-
-        impl Default for Btmprio1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Btmprio1 {
             /// BTM8 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn btm8(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_btm8(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// BTM9 — 4 bits (offset 4)
@@ -8217,25 +7525,19 @@ pub mod bt {
 
         /// BTMPRIO2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Btmprio2(pub u32);
-
-        impl Default for Btmprio2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Btmprio2 {
             /// BTM16 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn btm16(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_btm16(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// BTM17 — 4 bits (offset 4)
@@ -8296,25 +7598,19 @@ pub mod bt {
 
         /// MWSPTABLE0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptable0(pub u32);
-
-        impl Default for Mwsptable0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptable0 {
             /// MWSPAT0_0 — 3 bits (offset 0)
             #[inline(always)]
             pub const fn mwspat0_0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_mwspat0_0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// MWSPAT0_1 — 3 bits (offset 4)
@@ -8375,25 +7671,19 @@ pub mod bt {
 
         /// MWSPTIMING00
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming00(pub u32);
-
-        impl Default for Mwsptiming00 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming00 {
             /// MWSPTIM0_0_TO_1 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim0_0_to_1(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim0_0_to_1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSPTIM0_1_TO_2 — 16 bits (offset 16)
@@ -8410,25 +7700,19 @@ pub mod bt {
 
         /// MWSPTIMING01
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming01(pub u32);
-
-        impl Default for Mwsptiming01 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming01 {
             /// MWSPTIM0_2_TO_3 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim0_2_to_3(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim0_2_to_3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSPTIM0_3_TO_4 — 16 bits (offset 16)
@@ -8445,49 +7729,37 @@ pub mod bt {
 
         /// MWSPTIMING02
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming02(pub u32);
-
-        impl Default for Mwsptiming02 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming02 {
             /// MWSPTIM0_4_TO_5 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim0_4_to_5(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim0_4_to_5(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
         }
 
         /// MWSPTABLE1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptable1(pub u32);
-
-        impl Default for Mwsptable1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptable1 {
             /// MWSPAT1_0 — 3 bits (offset 0)
             #[inline(always)]
             pub const fn mwspat1_0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_mwspat1_0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// MWSPAT1_1 — 3 bits (offset 4)
@@ -8548,25 +7820,19 @@ pub mod bt {
 
         /// MWSPTIMING10
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming10(pub u32);
-
-        impl Default for Mwsptiming10 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming10 {
             /// MWSPTIM1_0_TO_1 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim1_0_to_1(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim1_0_to_1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSPTIM1_1_TO_2 — 16 bits (offset 16)
@@ -8583,25 +7849,19 @@ pub mod bt {
 
         /// MWSPTIMING11
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming11(pub u32);
-
-        impl Default for Mwsptiming11 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming11 {
             /// MWSPTIM1_2_TO_3 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim1_2_to_3(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim1_2_to_3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSPTIM1_3_TO_4 — 16 bits (offset 16)
@@ -8618,49 +7878,37 @@ pub mod bt {
 
         /// MWSPTIMING12
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming12(pub u32);
-
-        impl Default for Mwsptiming12 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming12 {
             /// MWSPTIM1_4_TO_5 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim1_4_to_5(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim1_4_to_5(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
         }
 
         /// MWSPTABLE2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptable2(pub u32);
-
-        impl Default for Mwsptable2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptable2 {
             /// MWSPAT2_0 — 3 bits (offset 0)
             #[inline(always)]
             pub const fn mwspat2_0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_mwspat2_0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// MWSPAT2_1 — 3 bits (offset 4)
@@ -8721,25 +7969,19 @@ pub mod bt {
 
         /// MWSPTIMING20
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming20(pub u32);
-
-        impl Default for Mwsptiming20 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming20 {
             /// MWSPTIM2_0_TO_1 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim2_0_to_1(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim2_0_to_1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSPTIM2_1_TO_2 — 16 bits (offset 16)
@@ -8756,25 +7998,19 @@ pub mod bt {
 
         /// MWSPTIMING21
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming21(pub u32);
-
-        impl Default for Mwsptiming21 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming21 {
             /// MWSPTIM2_2_TO_3 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim2_2_to_3(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim2_2_to_3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSPTIM2_3_TO_4 — 16 bits (offset 16)
@@ -8791,49 +8027,37 @@ pub mod bt {
 
         /// MWSPTIMING22
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsptiming22(pub u32);
-
-        impl Default for Mwsptiming22 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsptiming22 {
             /// MWSPTIM2_4_TO_5 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsptim2_4_to_5(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsptim2_4_to_5(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
         }
 
         /// MWSIFSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsifstat(pub u32);
-
-        impl Default for Mwsifstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsifstat {
             /// MWS_PATTERN_VAL — 2 bits (offset 0)
             #[inline(always)]
             pub const fn mws_pattern_val(&self) -> u8 {
-                ((self.0 >> 0) & 0x3) as u8
+                (self.0 & 0x3) as u8
             }
 
             #[inline(always)]
             pub fn set_mws_pattern_val(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3 << 0)) | ((val as u32 & 0x3) << 0);
+                self.0 = (self.0 & !0x3) | (val as u32 & 0x3);
             }
 
             /// MWS_PATTERN_START_IND_VAL — 1 bit (offset 2)
@@ -8872,25 +8096,19 @@ pub mod bt {
 
         /// MWSTXTABLE0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwstxtable0(pub u32);
-
-        impl Default for Mwstxtable0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwstxtable0 {
             /// MWSTXFREQL — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwstxfreql(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwstxfreql(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSTXFREQH — 16 bits (offset 16)
@@ -8907,25 +8125,19 @@ pub mod bt {
 
         /// MWSRXTABLE0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsrxtable0(pub u32);
-
-        impl Default for Mwsrxtable0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsrxtable0 {
             /// MWSRXFREQL — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsrxfreql(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsrxfreql(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSRXFREQH — 16 bits (offset 16)
@@ -8942,25 +8154,19 @@ pub mod bt {
 
         /// MWSSFTABLE1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable1(pub u32);
-
-        impl Default for Mwssftable1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable1 {
             /// MWSSCANFREQL1 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql1(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH1 — 16 bits (offset 16)
@@ -8977,25 +8183,19 @@ pub mod bt {
 
         /// MWSSFTABLE2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable2(pub u32);
-
-        impl Default for Mwssftable2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable2 {
             /// MWSSCANFREQL2 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql2(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql2(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH2 — 16 bits (offset 16)
@@ -9012,25 +8212,19 @@ pub mod bt {
 
         /// MWSSFTABLE3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable3(pub u32);
-
-        impl Default for Mwssftable3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable3 {
             /// MWSSCANFREQL3 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql3(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH3 — 16 bits (offset 16)
@@ -9047,25 +8241,19 @@ pub mod bt {
 
         /// MWSSFTABLE4
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable4(pub u32);
-
-        impl Default for Mwssftable4 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable4 {
             /// MWSSCANFREQL4 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql4(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql4(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH4 — 16 bits (offset 16)
@@ -9082,25 +8270,19 @@ pub mod bt {
 
         /// MWSSFTABLE5
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable5(pub u32);
-
-        impl Default for Mwssftable5 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable5 {
             /// MWSSCANFREQL5 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql5(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql5(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH5 — 16 bits (offset 16)
@@ -9117,25 +8299,19 @@ pub mod bt {
 
         /// MWSSFTABLE6
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable6(pub u32);
-
-        impl Default for Mwssftable6 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable6 {
             /// MWSSCANFREQL6 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql6(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql6(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH6 — 16 bits (offset 16)
@@ -9152,25 +8328,19 @@ pub mod bt {
 
         /// MWSSFTABLE7
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable7(pub u32);
-
-        impl Default for Mwssftable7 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable7 {
             /// MWSSCANFREQL7 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql7(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql7(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH7 — 16 bits (offset 16)
@@ -9187,25 +8357,19 @@ pub mod bt {
 
         /// MWSSFTABLE8
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwssftable8(pub u32);
-
-        impl Default for Mwssftable8 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwssftable8 {
             /// MWSSCANFREQL8 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mwsscanfreql8(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsscanfreql8(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// MWSSCANFREQH8 — 16 bits (offset 16)
@@ -9222,49 +8386,37 @@ pub mod bt {
 
         /// MWSFRSYNCOFFSET
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsfrsyncoffset(pub u32);
-
-        impl Default for Mwsfrsyncoffset {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsfrsyncoffset {
             /// MWSFRSYNCASSERTDLY — 15 bits (offset 0)
             #[inline(always)]
             pub const fn mwsfrsyncassertdly(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FFF) as u16
+                (self.0 & 0x7FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsfrsyncassertdly(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FFF << 0)) | ((val as u32 & 0x7FFF) << 0);
+                self.0 = (self.0 & !0x7FFF) | (val as u32 & 0x7FFF);
             }
         }
 
         /// MWSTXOFFSET
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwstxoffset(pub u32);
-
-        impl Default for Mwstxoffset {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwstxoffset {
             /// MWSTXASSERTDLY — 11 bits (offset 0)
             #[inline(always)]
             pub const fn mwstxassertdly(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwstxassertdly(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
 
             /// MWSTXDEASSERTDLY — 11 bits (offset 16)
@@ -9281,25 +8433,19 @@ pub mod bt {
 
         /// MWSRXOFFSET
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwsrxoffset(pub u32);
-
-        impl Default for Mwsrxoffset {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwsrxoffset {
             /// MWSRXASSERTDLY — 11 bits (offset 0)
             #[inline(always)]
             pub const fn mwsrxassertdly(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_mwsrxassertdly(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
 
             /// MWSRXDEASSERTDLY — 11 bits (offset 16)
@@ -9316,25 +8462,19 @@ pub mod bt {
 
         /// MWSWCICNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwswcicntl0(pub u32);
-
-        impl Default for Mwswcicntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwswcicntl0 {
             /// MWSWCI_TXFRACTDIV — 3 bits (offset 0)
             #[inline(always)]
             pub const fn mwswci_txfractdiv(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_mwswci_txfractdiv(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// MWSWCI_TXINTDIV — 13 bits (offset 3)
@@ -9373,25 +8513,19 @@ pub mod bt {
 
         /// MWSWCICNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwswcicntl1(pub u32);
-
-        impl Default for Mwswcicntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwswcicntl1 {
             /// WCIIFSCNT — 4 bits (offset 0)
             #[inline(always)]
             pub const fn wciifscnt(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_wciifscnt(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// WCISEL — 1 bit (offset 15)
@@ -9430,25 +8564,19 @@ pub mod bt {
 
         /// MWSWCITXCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwswcitxcntl(pub u32);
-
-        impl Default for Mwswcitxcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwswcitxcntl {
             /// WCITXPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn wcitxptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_wcitxptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// WCITXNB — 6 bits (offset 16)
@@ -9465,25 +8593,19 @@ pub mod bt {
 
         /// MWSWCIRXCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Mwswcirxcntl(pub u32);
-
-        impl Default for Mwswcirxcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Mwswcirxcntl {
             /// WCIRXPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn wcirxptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_wcirxptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// WCIRXNB — 6 bits (offset 16)
@@ -9500,25 +8622,19 @@ pub mod bt {
 
         /// LSAMCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Lsamcntl0(pub u32);
-
-        impl Default for Lsamcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Lsamcntl0 {
             /// LOCAL_SAM_PTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn local_sam_ptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_local_sam_ptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// LOCAL_SAM_LENGTH — 6 bits (offset 16)
@@ -9546,49 +8662,37 @@ pub mod bt {
 
         /// LSAMCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Lsamcntl1(pub u32);
-
-        impl Default for Lsamcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Lsamcntl1 {
             /// LOCAL_SAM_OFFSET — 6 bits (offset 0)
             #[inline(always)]
             pub const fn local_sam_offset(&self) -> u8 {
-                ((self.0 >> 0) & 0x3F) as u8
+                (self.0 & 0x3F) as u8
             }
 
             #[inline(always)]
             pub fn set_local_sam_offset(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3F << 0)) | ((val as u32 & 0x3F) << 0);
+                self.0 = (self.0 & !0x3F) | (val as u32 & 0x3F);
             }
         }
 
         /// eSCOCHANCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escochancntl0(pub u32);
-
-        impl Default for Escochancntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escochancntl0 {
             /// TeSCO0 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn tesco0(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_tesco0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// INTDELAY0 — 5 bits (offset 8)
@@ -9649,25 +8753,19 @@ pub mod bt {
 
         /// eSCOMUTECNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escomutecntl0(pub u32);
-
-        impl Default for Escomutecntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escomutecntl0 {
             /// MUTEPATT0 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mutepatt0(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mutepatt0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// INVL0_0 — 2 bits (offset 16)
@@ -9717,25 +8815,19 @@ pub mod bt {
 
         /// eSCOCURRENTTXPTR0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escocurrenttxptr0(pub u32);
-
-        impl Default for Escocurrenttxptr0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escocurrenttxptr0 {
             /// eSCO0PTRTX0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn esco0ptrtx0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_esco0ptrtx0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// eSCO0PTRTX1 — 14 bits (offset 16)
@@ -9752,25 +8844,19 @@ pub mod bt {
 
         /// eSCOCURRENTRXPTR0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escocurrentrxptr0(pub u32);
-
-        impl Default for Escocurrentrxptr0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escocurrentrxptr0 {
             /// eSCO0PTRRX0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn esco0ptrrx0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_esco0ptrrx0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// eSCO0PTRRX1 — 14 bits (offset 16)
@@ -9787,25 +8873,19 @@ pub mod bt {
 
         /// eSCOLTCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escoltcntl0(pub u32);
-
-        impl Default for Escoltcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escoltcntl0 {
             /// SYNLTADDR0 — 3 bits (offset 0)
             #[inline(always)]
             pub const fn synltaddr0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_synltaddr0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// SYNTYPE0 — 1 bit (offset 3)
@@ -9855,25 +8935,19 @@ pub mod bt {
 
         /// eSCOTRCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escotrcntl0(pub u32);
-
-        impl Default for Escotrcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escotrcntl0 {
             /// RXTYPE0 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn rxtype0(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_rxtype0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// RXLEN0 — 10 bits (offset 4)
@@ -9923,49 +8997,37 @@ pub mod bt {
 
         /// eSCODAYCNT0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escodaycnt0(pub u32);
-
-        impl Default for Escodaycnt0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escodaycnt0 {
             /// DAYCOUNTER0 — 11 bits (offset 0)
             #[inline(always)]
             pub const fn daycounter0(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_daycounter0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
         }
 
         /// eSCOCHANCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escochancntl1(pub u32);
-
-        impl Default for Escochancntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escochancntl1 {
             /// TeSCO1 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn tesco1(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_tesco1(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// INTDELAY1 — 5 bits (offset 8)
@@ -10026,25 +9088,19 @@ pub mod bt {
 
         /// eSCOMUTECNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escomutecntl1(pub u32);
-
-        impl Default for Escomutecntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escomutecntl1 {
             /// MUTEPATT1 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mutepatt1(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mutepatt1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// INVL1_0 — 2 bits (offset 16)
@@ -10094,25 +9150,19 @@ pub mod bt {
 
         /// eSCOCURRENTTXPTR1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escocurrenttxptr1(pub u32);
-
-        impl Default for Escocurrenttxptr1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escocurrenttxptr1 {
             /// eSCO1PTRTX0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn esco1ptrtx0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_esco1ptrtx0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// eSCO1PTRTX1 — 14 bits (offset 16)
@@ -10129,25 +9179,19 @@ pub mod bt {
 
         /// eSCOCURRENTRXPTR1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escocurrentrxptr1(pub u32);
-
-        impl Default for Escocurrentrxptr1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escocurrentrxptr1 {
             /// eSCO1PTRRX0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn esco1ptrrx0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_esco1ptrrx0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// eSCO1PTRRX1 — 14 bits (offset 16)
@@ -10164,25 +9208,19 @@ pub mod bt {
 
         /// eSCOLTCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escoltcntl1(pub u32);
-
-        impl Default for Escoltcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escoltcntl1 {
             /// SYNLTADDR1 — 3 bits (offset 0)
             #[inline(always)]
             pub const fn synltaddr1(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_synltaddr1(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// SYNTYPE1 — 1 bit (offset 3)
@@ -10232,25 +9270,19 @@ pub mod bt {
 
         /// eSCOTRCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escotrcntl1(pub u32);
-
-        impl Default for Escotrcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escotrcntl1 {
             /// RXTYPE1 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn rxtype1(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_rxtype1(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// RXLEN1 — 10 bits (offset 4)
@@ -10300,49 +9332,37 @@ pub mod bt {
 
         /// eSCODAYCNT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escodaycnt1(pub u32);
-
-        impl Default for Escodaycnt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escodaycnt1 {
             /// DAYCOUNTER1 — 11 bits (offset 0)
             #[inline(always)]
             pub const fn daycounter1(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_daycounter1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
         }
 
         /// eSCOCHANCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escochancntl2(pub u32);
-
-        impl Default for Escochancntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escochancntl2 {
             /// TeSCO2 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn tesco2(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_tesco2(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// INTDELAY2 — 5 bits (offset 8)
@@ -10403,25 +9423,19 @@ pub mod bt {
 
         /// eSCOMUTECNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escomutecntl2(pub u32);
-
-        impl Default for Escomutecntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escomutecntl2 {
             /// MUTEPATT2 — 16 bits (offset 0)
             #[inline(always)]
             pub const fn mutepatt2(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_mutepatt2(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// INVL2_0 — 2 bits (offset 16)
@@ -10471,25 +9485,19 @@ pub mod bt {
 
         /// eSCOCURRENTTXPTR2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escocurrenttxptr2(pub u32);
-
-        impl Default for Escocurrenttxptr2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escocurrenttxptr2 {
             /// eSCO2PTRTX0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn esco2ptrtx0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_esco2ptrtx0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// eSCO2PTRTX1 — 14 bits (offset 16)
@@ -10506,25 +9514,19 @@ pub mod bt {
 
         /// eSCOCURRENTRXPTR2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escocurrentrxptr2(pub u32);
-
-        impl Default for Escocurrentrxptr2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escocurrentrxptr2 {
             /// eSCO2PTRRX0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn esco2ptrrx0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_esco2ptrrx0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// eSCO2PTRRX1 — 14 bits (offset 16)
@@ -10541,25 +9543,19 @@ pub mod bt {
 
         /// eSCOLTCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escoltcntl2(pub u32);
-
-        impl Default for Escoltcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escoltcntl2 {
             /// SYNLTADDR2 — 3 bits (offset 0)
             #[inline(always)]
             pub const fn synltaddr2(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_synltaddr2(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// SYNTYPE2 — 1 bit (offset 3)
@@ -10609,25 +9605,19 @@ pub mod bt {
 
         /// eSCOTRCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escotrcntl2(pub u32);
-
-        impl Default for Escotrcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escotrcntl2 {
             /// RXTYPE2 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn rxtype2(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_rxtype2(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// RXLEN2 — 10 bits (offset 4)
@@ -10677,49 +9667,37 @@ pub mod bt {
 
         /// eSCODAYCNT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Escodaycnt2(pub u32);
-
-        impl Default for Escodaycnt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Escodaycnt2 {
             /// DAYCOUNTER2 — 11 bits (offset 0)
             #[inline(always)]
             pub const fn daycounter2(&self) -> u16 {
-                ((self.0 >> 0) & 0x7FF) as u16
+                (self.0 & 0x7FF) as u16
             }
 
             #[inline(always)]
             pub fn set_daycounter2(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x7FF << 0)) | ((val as u32 & 0x7FF) << 0);
+                self.0 = (self.0 & !0x7FF) | (val as u32 & 0x7FF);
             }
         }
 
         /// AUDIOCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Audiocntl0(pub u32);
-
-        impl Default for Audiocntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Audiocntl0 {
             /// CVSD_BITORDER0 — 1 bit (offset 0)
             #[inline(always)]
             pub const fn cvsd_bitorder0(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_cvsd_bitorder0(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// CVSDEN0 — 1 bit (offset 7)
@@ -10780,25 +9758,19 @@ pub mod bt {
 
         /// AUDIOCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Audiocntl1(pub u32);
-
-        impl Default for Audiocntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Audiocntl1 {
             /// CVSD_BITORDER1 — 1 bit (offset 0)
             #[inline(always)]
             pub const fn cvsd_bitorder1(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_cvsd_bitorder1(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// CVSDEN1 — 1 bit (offset 7)
@@ -10859,25 +9831,19 @@ pub mod bt {
 
         /// AUDIOCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Audiocntl2(pub u32);
-
-        impl Default for Audiocntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Audiocntl2 {
             /// CVSD_BITORDER2 — 1 bit (offset 0)
             #[inline(always)]
             pub const fn cvsd_bitorder2(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_cvsd_bitorder2(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// CVSDEN2 — 1 bit (offset 7)
@@ -10938,25 +9904,19 @@ pub mod bt {
 
         /// PCMGENCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmgencntl(pub u32);
-
-        impl Default for Pcmgencntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmgencntl {
             /// PCMEN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn pcmen(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_pcmen(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// LRSWAP — 1 bit (offset 1)
@@ -11039,25 +9999,19 @@ pub mod bt {
 
         /// PCMPHYSCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmphyscntl0(pub u32);
-
-        impl Default for Pcmphyscntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmphyscntl0 {
             /// FSYNCSHP — 3 bits (offset 0)
             #[inline(always)]
             pub const fn fsyncshp(&self) -> u8 {
-                ((self.0 >> 0) & 0x7) as u8
+                (self.0 & 0x7) as u8
             }
 
             #[inline(always)]
             pub fn set_fsyncshp(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7 << 0)) | ((val as u32 & 0x7) << 0);
+                self.0 = (self.0 & !0x7) | (val as u32 & 0x7);
             }
 
             /// DOUTCFG — 2 bits (offset 4)
@@ -11151,25 +10105,19 @@ pub mod bt {
 
         /// PCMPHYSCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmphyscntl1(pub u32);
-
-        impl Default for Pcmphyscntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmphyscntl1 {
             /// PCMCLKVAL — 9 bits (offset 0)
             #[inline(always)]
             pub const fn pcmclkval(&self) -> u16 {
-                ((self.0 >> 0) & 0x1FF) as u16
+                (self.0 & 0x1FF) as u16
             }
 
             #[inline(always)]
             pub fn set_pcmclkval(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x1FF << 0)) | ((val as u32 & 0x1FF) << 0);
+                self.0 = (self.0 & !0x1FF) | (val as u32 & 0x1FF);
             }
 
             /// PCMCLKLIMIT — 8 bits (offset 16)
@@ -11197,25 +10145,19 @@ pub mod bt {
 
         /// PCMPADDING
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmpadding(pub u32);
-
-        impl Default for Pcmpadding {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmpadding {
             /// LSAMPPAD — 16 bits (offset 0)
             #[inline(always)]
             pub const fn lsamppad(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_lsamppad(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// RSAMPPAD — 16 bits (offset 16)
@@ -11232,49 +10174,37 @@ pub mod bt {
 
         /// PCMPLLCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmpllcntl0(pub u32);
-
-        impl Default for Pcmpllcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmpllcntl0 {
             /// RL — 20 bits (offset 0)
             #[inline(always)]
             pub const fn rl(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFF) as u32
+                self.0 & 0xFFFFF
             }
 
             #[inline(always)]
             pub fn set_rl(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFF << 0)) | ((val as u32 & 0xFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFF) | (val & 0xFFFFF);
             }
         }
 
         /// PCMPLLCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmpllcntl1(pub u32);
-
-        impl Default for Pcmpllcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmpllcntl1 {
             /// A — 19 bits (offset 0)
             #[inline(always)]
             pub const fn a(&self) -> u32 {
-                ((self.0 >> 0) & 0x7FFFF) as u32
+                self.0 & 0x7FFFF
             }
 
             #[inline(always)]
             pub fn set_a(&mut self, val: u32) {
-                self.0 = (self.0 & !(0x7FFFF << 0)) | ((val as u32 & 0x7FFFF) << 0);
+                self.0 = (self.0 & !0x7FFFF) | (val & 0x7FFFF);
             }
 
             /// OLC — 11 bits (offset 20)
@@ -11291,49 +10221,37 @@ pub mod bt {
 
         /// PCMPLLCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmpllcntl2(pub u32);
-
-        impl Default for Pcmpllcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmpllcntl2 {
             /// W — 19 bits (offset 0)
             #[inline(always)]
             pub const fn w(&self) -> u32 {
-                ((self.0 >> 0) & 0x7FFFF) as u32
+                self.0 & 0x7FFFF
             }
 
             #[inline(always)]
             pub fn set_w(&mut self, val: u32) {
-                self.0 = (self.0 & !(0x7FFFF << 0)) | ((val as u32 & 0x7FFFF) << 0);
+                self.0 = (self.0 & !0x7FFFF) | (val & 0x7FFFF);
             }
         }
 
         /// PCMSOURCEPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmsourceptr(pub u32);
-
-        impl Default for Pcmsourceptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmsourceptr {
             /// PCMSOURCEPTR0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn pcmsourceptr0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_pcmsourceptr0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// PCMSOURCEPTR1 — 14 bits (offset 16)
@@ -11350,25 +10268,19 @@ pub mod bt {
 
         /// PCMSINKPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Pcmsinkptr(pub u32);
-
-        impl Default for Pcmsinkptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Pcmsinkptr {
             /// PCMSINKPTR0 — 14 bits (offset 0)
             #[inline(always)]
             pub const fn pcmsinkptr0(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_pcmsinkptr0(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// PCMSINKPTR1 — 14 bits (offset 16)
@@ -11399,6 +10311,8 @@ pub mod ble {
     unsafe impl Sync for Ble {}
 
     impl Ble {
+        /// # Safety
+        /// `ptr` must point to a valid BLE core register block.
         #[inline(always)]
         pub const unsafe fn from_ptr(ptr: *mut ()) -> Self {
             Self {
@@ -12047,25 +10961,19 @@ pub mod ble {
 
         /// RWBLECNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rwblecntl(pub u32);
-
-        impl Default for Rwblecntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rwblecntl {
             /// RXWINSZDEF — 4 bits (offset 0)
             #[inline(always)]
             pub const fn rxwinszdef(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_rxwinszdef(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// RWBLE_EN — 1 bit (offset 8)
@@ -12269,25 +11177,19 @@ pub mod ble {
 
         /// VERSION
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Version(pub u32);
-
-        impl Default for Version {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Version {
             /// BUILD — 8 bits (offset 0)
             #[inline(always)]
             pub const fn build(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_build(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// UPG — 8 bits (offset 8)
@@ -12326,25 +11228,19 @@ pub mod ble {
 
         /// RWBLECONF
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rwbleconf(pub u32);
-
-        impl Default for Rwbleconf {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rwbleconf {
             /// ADDR_WIDTH — 5 bits (offset 0)
             #[inline(always)]
             pub const fn addr_width(&self) -> u8 {
-                ((self.0 >> 0) & 0x1F) as u8
+                (self.0 & 0x1F) as u8
             }
 
             #[inline(always)]
             pub fn set_addr_width(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x1F << 0)) | ((val as u32 & 0x1F) << 0);
+                self.0 = (self.0 & !0x1F) | (val as u32 & 0x1F);
             }
 
             /// BUS_TYPE — 1 bit (offset 6)
@@ -12493,25 +11389,19 @@ pub mod ble {
 
         /// INTCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intcntl0(pub u32);
-
-        impl Default for Intcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intcntl0 {
             /// STARTEVTINTMSK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn startevtintmsk(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_startevtintmsk(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// ENDEVTINTMSK — 1 bit (offset 1)
@@ -12605,14 +11495,8 @@ pub mod ble {
 
         /// INTSTAT0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intstat0(pub u32);
-
-        impl Default for Intstat0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intstat0 {
             /// HOPINTSTAT — 1 bit (offset 7)
@@ -12640,14 +11524,8 @@ pub mod ble {
 
         /// INTACK0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intack0(pub u32);
-
-        impl Default for Intack0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intack0 {
             /// HOPINTACK — 1 bit (offset 7)
@@ -12675,25 +11553,19 @@ pub mod ble {
 
         /// INTCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intcntl1(pub u32);
-
-        impl Default for Intcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intcntl1 {
             /// CLKNINTMSK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintmsk(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintmsk(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTMSK — 1 bit (offset 1)
@@ -12809,25 +11681,19 @@ pub mod ble {
 
         /// INTSTAT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intstat1(pub u32);
-
-        impl Default for Intstat1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intstat1 {
             /// CLKNINTSTAT — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintstat(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintstat(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTSTAT — 1 bit (offset 1)
@@ -12921,25 +11787,19 @@ pub mod ble {
 
         /// INTACK1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Intack1(pub u32);
-
-        impl Default for Intack1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Intack1 {
             /// CLKNINTACK — 1 bit (offset 0)
             #[inline(always)]
             pub const fn clknintack(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_clknintack(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SLPINTACK — 1 bit (offset 1)
@@ -13033,25 +11893,19 @@ pub mod ble {
 
         /// ACTFIFOSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actfifostat(pub u32);
-
-        impl Default for Actfifostat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actfifostat {
             /// STARTACTINTSTAT — 1 bit (offset 0)
             #[inline(always)]
             pub const fn startactintstat(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_startactintstat(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// ENDACTINTSTAT — 1 bit (offset 1)
@@ -13156,73 +12010,55 @@ pub mod ble {
 
         /// CURRENTRXDESCPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Currentrxdescptr(pub u32);
-
-        impl Default for Currentrxdescptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Currentrxdescptr {
             /// CURRENTRXDESCPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn currentrxdescptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_currentrxdescptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// ETPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Etptr(pub u32);
-
-        impl Default for Etptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Etptr {
             /// ETPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn etptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_etptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// DEEPSLCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslcntl(pub u32);
-
-        impl Default for Deepslcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslcntl {
             /// OSC_SLEEP_EN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn osc_sleep_en(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_osc_sleep_en(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// RADIO_SLEEP_EN — 1 bit (offset 1)
@@ -13283,14 +12119,8 @@ pub mod ble {
 
         /// DEEPSLWKUP
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslwkup(pub u32);
-
-        impl Default for Deepslwkup {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslwkup {
             /// DEEPSLTIME — 32 bits (offset 0)
@@ -13307,14 +12137,8 @@ pub mod ble {
 
         /// DEEPSLSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Deepslstat(pub u32);
-
-        impl Default for Deepslstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Deepslstat {
             /// DEEPSLDUR — 32 bits (offset 0)
@@ -13331,25 +12155,19 @@ pub mod ble {
 
         /// ENBPRESET
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Enbpreset(pub u32);
-
-        impl Default for Enbpreset {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Enbpreset {
             /// TWRM — 10 bits (offset 0)
             #[inline(always)]
             pub const fn twrm(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_twrm(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
 
             /// TWOSC — 11 bits (offset 10)
@@ -13377,49 +12195,37 @@ pub mod ble {
 
         /// FINECNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finecntcorr(pub u32);
-
-        impl Default for Finecntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finecntcorr {
             /// FINECNTCORR — 10 bits (offset 0)
             #[inline(always)]
             pub const fn finecntcorr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_finecntcorr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNCNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkncntcorr(pub u32);
-
-        impl Default for Clkncntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkncntcorr {
             /// CLKNCNTCORR — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkncntcorr(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkncntcorr(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
 
             /// ABS_DELTA — 1 bit (offset 31)
@@ -13436,25 +12242,19 @@ pub mod ble {
 
         /// DIAGCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Diagcntl(pub u32);
-
-        impl Default for Diagcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Diagcntl {
             /// DIAG0 — 7 bits (offset 0)
             #[inline(always)]
             pub const fn diag0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_diag0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// DIAG0_EN — 1 bit (offset 7)
@@ -13537,25 +12337,19 @@ pub mod ble {
 
         /// DIAGSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Diagstat(pub u32);
-
-        impl Default for Diagstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Diagstat {
             /// DIAG0STAT — 8 bits (offset 0)
             #[inline(always)]
             pub const fn diag0stat(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_diag0stat(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// DIAG1STAT — 8 bits (offset 8)
@@ -13594,25 +12388,19 @@ pub mod ble {
 
         /// DEBUGADDMAX
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Debugaddmax(pub u32);
-
-        impl Default for Debugaddmax {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Debugaddmax {
             /// EM_ADDMAX — 16 bits (offset 0)
             #[inline(always)]
             pub const fn em_addmax(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_em_addmax(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// REG_ADDMAX — 16 bits (offset 16)
@@ -13629,25 +12417,19 @@ pub mod ble {
 
         /// DEBUGADDMIN
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Debugaddmin(pub u32);
-
-        impl Default for Debugaddmin {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Debugaddmin {
             /// EM_ADDMIN — 16 bits (offset 0)
             #[inline(always)]
             pub const fn em_addmin(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_em_addmin(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// REG_ADDMIN — 16 bits (offset 16)
@@ -13664,25 +12446,19 @@ pub mod ble {
 
         /// ERRORTYPESTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Errortypestat(pub u32);
-
-        impl Default for Errortypestat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Errortypestat {
             /// TXCRYPT_ERROR — 1 bit (offset 0)
             #[inline(always)]
             pub const fn txcrypt_error(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_txcrypt_error(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// RXCRYPT_ERROR — 1 bit (offset 1)
@@ -13941,25 +12717,19 @@ pub mod ble {
 
         /// SWPROFILING
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Swprofiling(pub u32);
-
-        impl Default for Swprofiling {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Swprofiling {
             /// SWPROF0 — 1 bit (offset 0)
             #[inline(always)]
             pub const fn swprof0(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_swprof0(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SWPROF1 — 1 bit (offset 1)
@@ -14306,14 +13076,8 @@ pub mod ble {
 
         /// RADIOCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl0(pub u32);
-
-        impl Default for Radiocntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl0 {
             /// SPICOMP — 1 bit (offset 1)
@@ -14363,25 +13127,19 @@ pub mod ble {
 
         /// RADIOCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl1(pub u32);
-
-        impl Default for Radiocntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl1 {
             /// SUBVERSION — 4 bits (offset 0)
             #[inline(always)]
             pub const fn subversion(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_subversion(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// XRFSEL — 6 bits (offset 4)
@@ -14497,25 +13255,19 @@ pub mod ble {
 
         /// RADIOCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl2(pub u32);
-
-        impl Default for Radiocntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl2 {
             /// FREQTABLE_PTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn freqtable_ptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_freqtable_ptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// SYNCERR — 3 bits (offset 16)
@@ -14587,25 +13339,19 @@ pub mod ble {
 
         /// RADIOCNTL3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiocntl3(pub u32);
-
-        impl Default for Radiocntl3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiocntl3 {
             /// TXVALID_BEH — 2 bits (offset 0)
             #[inline(always)]
             pub const fn txvalid_beh(&self) -> u8 {
-                ((self.0 >> 0) & 0x3) as u8
+                (self.0 & 0x3) as u8
             }
 
             #[inline(always)]
             pub fn set_txvalid_beh(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3 << 0)) | ((val as u32 & 0x3) << 0);
+                self.0 = (self.0 & !0x3) | (val as u32 & 0x3);
             }
 
             /// TXRATE0CFG — 2 bits (offset 8)
@@ -14732,25 +13478,19 @@ pub mod ble {
 
         /// RADIOPWRUPDN0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiopwrupdn0(pub u32);
-
-        impl Default for Radiopwrupdn0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiopwrupdn0 {
             /// TXPWRUP0 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txpwrup0(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txpwrup0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// TXPWRDN0 — 7 bits (offset 8)
@@ -14789,25 +13529,19 @@ pub mod ble {
 
         /// RADIOPWRUPDN1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiopwrupdn1(pub u32);
-
-        impl Default for Radiopwrupdn1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiopwrupdn1 {
             /// TXPWRUP1 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txpwrup1(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txpwrup1(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// TXPWRDN1 — 7 bits (offset 8)
@@ -14846,25 +13580,19 @@ pub mod ble {
 
         /// RADIOPWRUPDN2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiopwrupdn2(pub u32);
-
-        impl Default for Radiopwrupdn2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiopwrupdn2 {
             /// TXPWRUP2 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txpwrup2(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txpwrup2(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// TXPWRDN2 — 7 bits (offset 8)
@@ -14903,25 +13631,19 @@ pub mod ble {
 
         /// RADIOPWRUPDN3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiopwrupdn3(pub u32);
-
-        impl Default for Radiopwrupdn3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiopwrupdn3 {
             /// TXPWRUP3 — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txpwrup3(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txpwrup3(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// TXPWRDN3 — 7 bits (offset 8)
@@ -14938,25 +13660,19 @@ pub mod ble {
 
         /// RADIOTXRXTIM0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiotxrxtim0(pub u32);
-
-        impl Default for Radiotxrxtim0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiotxrxtim0 {
             /// TXPATHDLY0 — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txpathdly0(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txpathdly0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// RXPATHDLY0 — 7 bits (offset 8)
@@ -14984,25 +13700,19 @@ pub mod ble {
 
         /// RADIOTXRXTIM1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiotxrxtim1(pub u32);
-
-        impl Default for Radiotxrxtim1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiotxrxtim1 {
             /// TXPATHDLY1 — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txpathdly1(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txpathdly1(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// RXPATHDLY1 — 7 bits (offset 8)
@@ -15030,25 +13740,19 @@ pub mod ble {
 
         /// RADIOTXRXTIM2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiotxrxtim2(pub u32);
-
-        impl Default for Radiotxrxtim2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiotxrxtim2 {
             /// TXPATHDLY2 — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txpathdly2(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txpathdly2(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// RXPATHDLY2 — 8 bits (offset 8)
@@ -15087,25 +13791,19 @@ pub mod ble {
 
         /// RADIOTXRXTIM3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Radiotxrxtim3(pub u32);
-
-        impl Default for Radiotxrxtim3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Radiotxrxtim3 {
             /// TXPATHDLY3 — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txpathdly3(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txpathdly3(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// RFRXTMDA3 — 7 bits (offset 16)
@@ -15133,25 +13831,19 @@ pub mod ble {
 
         /// SPIPTRCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl0(pub u32);
-
-        impl Default for Spiptrcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl0 {
             /// TXONPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn txonptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_txonptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// TXOFFPTR — 14 bits (offset 16)
@@ -15168,25 +13860,19 @@ pub mod ble {
 
         /// SPIPTRCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl1(pub u32);
-
-        impl Default for Spiptrcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl1 {
             /// RXONPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn rxonptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_rxonptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// RXOFFPTR — 14 bits (offset 16)
@@ -15203,25 +13889,19 @@ pub mod ble {
 
         /// SPIPTRCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl2(pub u32);
-
-        impl Default for Spiptrcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl2 {
             /// RSSIPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn rssiptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_rssiptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// RXLENGTHPTR — 14 bits (offset 16)
@@ -15238,25 +13918,19 @@ pub mod ble {
 
         /// SPIPTRCNTL3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Spiptrcntl3(pub u32);
-
-        impl Default for Spiptrcntl3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Spiptrcntl3 {
             /// RXPKTTYPPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn rxpkttypptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_rxpkttypptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// CTESAMPPTR — 14 bits (offset 16)
@@ -15273,25 +13947,19 @@ pub mod ble {
 
         /// AESCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aescntl(pub u32);
-
-        impl Default for Aescntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aescntl {
             /// AES_START — 1 bit (offset 0)
             #[inline(always)]
             pub const fn aes_start(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_aes_start(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// AES_MODE — 1 bit (offset 1)
@@ -15308,14 +13976,8 @@ pub mod ble {
 
         /// AESKEY31_0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey310(pub u32);
-
-        impl Default for Aeskey310 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey310 {
             /// AESKEY31_0 — 32 bits (offset 0)
@@ -15332,14 +13994,8 @@ pub mod ble {
 
         /// AESKEY63_32
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey6332(pub u32);
-
-        impl Default for Aeskey6332 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey6332 {
             /// AESKEY63_32 — 32 bits (offset 0)
@@ -15356,14 +14012,8 @@ pub mod ble {
 
         /// AESKEY95_64
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey9564(pub u32);
-
-        impl Default for Aeskey9564 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey9564 {
             /// AESKEY95_64 — 32 bits (offset 0)
@@ -15380,14 +14030,8 @@ pub mod ble {
 
         /// AESKEY127_96
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aeskey12796(pub u32);
-
-        impl Default for Aeskey12796 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aeskey12796 {
             /// AESKEY127_96 — 32 bits (offset 0)
@@ -15404,38 +14048,26 @@ pub mod ble {
 
         /// AESPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Aesptr(pub u32);
-
-        impl Default for Aesptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Aesptr {
             /// AESPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn aesptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_aesptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// TXMICVAL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Txmicval(pub u32);
-
-        impl Default for Txmicval {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Txmicval {
             /// TXMICVAL — 32 bits (offset 0)
@@ -15452,14 +14084,8 @@ pub mod ble {
 
         /// RXMICVAL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rxmicval(pub u32);
-
-        impl Default for Rxmicval {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rxmicval {
             /// RXMICVAL — 32 bits (offset 0)
@@ -15476,25 +14102,19 @@ pub mod ble {
 
         /// RFTESTCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftestcntl(pub u32);
-
-        impl Default for Rftestcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftestcntl {
             /// TXLENGTH — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txlength(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txlength(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// TXPKTCNTEN — 1 bit (offset 11)
@@ -15588,14 +14208,8 @@ pub mod ble {
 
         /// RFTESTTXSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftesttxstat(pub u32);
-
-        impl Default for Rftesttxstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftesttxstat {
             /// TXPKTCNT — 32 bits (offset 0)
@@ -15612,14 +14226,8 @@ pub mod ble {
 
         /// RFTESTRXSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Rftestrxstat(pub u32);
-
-        impl Default for Rftestrxstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Rftestrxstat {
             /// RXPKTCNT — 32 bits (offset 0)
@@ -15636,25 +14244,19 @@ pub mod ble {
 
         /// TIMGENCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Timgencntl(pub u32);
-
-        impl Default for Timgencntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Timgencntl {
             /// PREFETCH_TIME — 9 bits (offset 0)
             #[inline(always)]
             pub const fn prefetch_time(&self) -> u16 {
-                ((self.0 >> 0) & 0x1FF) as u16
+                (self.0 & 0x1FF) as u16
             }
 
             #[inline(always)]
             pub fn set_prefetch_time(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x1FF << 0)) | ((val as u32 & 0x1FF) << 0);
+                self.0 = (self.0 & !0x1FF) | (val as u32 & 0x1FF);
             }
 
             /// PREFETCHABORT_TIME — 10 bits (offset 16)
@@ -15671,193 +14273,145 @@ pub mod ble {
 
         /// FINETIMTGT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finetimtgt(pub u32);
-
-        impl Default for Finetimtgt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finetimtgt {
             /// FINETARGET — 28 bits (offset 0)
             #[inline(always)]
             pub const fn finetarget(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_finetarget(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// CLKNTGT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt1(pub u32);
-
-        impl Default for Clkntgt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt1 {
             /// CLKNTGT1 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt1(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt1(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt1(pub u32);
-
-        impl Default for Hmicrosectgt1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt1 {
             /// HMICROSECTGT1 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt1(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt1(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNTGT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt2(pub u32);
-
-        impl Default for Clkntgt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt2 {
             /// CLKNTGT2 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt2(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt2(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt2(pub u32);
-
-        impl Default for Hmicrosectgt2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt2 {
             /// HMICROSECTGT2 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt2(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt2(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// CLKNTGT3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Clkntgt3(pub u32);
-
-        impl Default for Clkntgt3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Clkntgt3 {
             /// CLKNTGT3 — 28 bits (offset 0)
             #[inline(always)]
             pub const fn clkntgt3(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_clkntgt3(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// HMICROSECTGT3
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Hmicrosectgt3(pub u32);
-
-        impl Default for Hmicrosectgt3 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Hmicrosectgt3 {
             /// HMICROSECTGT3 — 10 bits (offset 0)
             #[inline(always)]
             pub const fn hmicrosectgt3(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_hmicrosectgt3(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// SLOTCLK
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Slotclk(pub u32);
-
-        impl Default for Slotclk {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Slotclk {
             /// SCLK — 28 bits (offset 0)
             #[inline(always)]
             pub const fn sclk(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_sclk(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
 
             /// CLKN_UPD — 1 bit (offset 30)
@@ -15885,49 +14439,37 @@ pub mod ble {
 
         /// FINETIMECNT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Finetimecnt(pub u32);
-
-        impl Default for Finetimecnt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Finetimecnt {
             /// FINECNT — 10 bits (offset 0)
             #[inline(always)]
             pub const fn finecnt(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_finecnt(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ACTSCHCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actschcntl(pub u32);
-
-        impl Default for Actschcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actschcntl {
             /// ENTRY_IDX — 4 bits (offset 0)
             #[inline(always)]
             pub const fn entry_idx(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_entry_idx(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// START_ACT — 1 bit (offset 31)
@@ -15944,169 +14486,127 @@ pub mod ble {
 
         /// STARTEVTCLKNTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Startevtclknts(pub u32);
-
-        impl Default for Startevtclknts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Startevtclknts {
             /// STARTEVTCLKNTS — 28 bits (offset 0)
             #[inline(always)]
             pub const fn startevtclknts(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_startevtclknts(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// STARTEVTFINECNTTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Startevtfinecntts(pub u32);
-
-        impl Default for Startevtfinecntts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Startevtfinecntts {
             /// STARTEVTFINECNTTS — 10 bits (offset 0)
             #[inline(always)]
             pub const fn startevtfinecntts(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_startevtfinecntts(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ENDEVTCLKNTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Endevtclknts(pub u32);
-
-        impl Default for Endevtclknts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Endevtclknts {
             /// ENDEVTCLKNTS — 28 bits (offset 0)
             #[inline(always)]
             pub const fn endevtclknts(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_endevtclknts(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// ENDEVTFINECNTTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Endevtfinecntts(pub u32);
-
-        impl Default for Endevtfinecntts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Endevtfinecntts {
             /// ENDEVTFINECNTTS — 10 bits (offset 0)
             #[inline(always)]
             pub const fn endevtfinecntts(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_endevtfinecntts(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// SKIPEVTCLKNTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Skipevtclknts(pub u32);
-
-        impl Default for Skipevtclknts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Skipevtclknts {
             /// SKIPEVTCLKNTS — 28 bits (offset 0)
             #[inline(always)]
             pub const fn skipevtclknts(&self) -> u32 {
-                ((self.0 >> 0) & 0xFFFFFFF) as u32
+                self.0 & 0xFFFFFFF
             }
 
             #[inline(always)]
             pub fn set_skipevtclknts(&mut self, val: u32) {
-                self.0 = (self.0 & !(0xFFFFFFF << 0)) | ((val as u32 & 0xFFFFFFF) << 0);
+                self.0 = (self.0 & !0xFFFFFFF) | (val & 0xFFFFFFF);
             }
         }
 
         /// SKIPEVTFINECNTTS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Skipevtfinecntts(pub u32);
-
-        impl Default for Skipevtfinecntts {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Skipevtfinecntts {
             /// SKIPEVTFINECNTTS — 10 bits (offset 0)
             #[inline(always)]
             pub const fn skipevtfinecntts(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FF) as u16
+                (self.0 & 0x3FF) as u16
             }
 
             #[inline(always)]
             pub fn set_skipevtfinecntts(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FF << 0)) | ((val as u32 & 0x3FF) << 0);
+                self.0 = (self.0 & !0x3FF) | (val as u32 & 0x3FF);
             }
         }
 
         /// ADVTIM
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Advtim(pub u32);
-
-        impl Default for Advtim {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Advtim {
             /// ADVINT — 14 bits (offset 0)
             #[inline(always)]
             pub const fn advint(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_advint(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// RX_AUXPTR_THR — 8 bits (offset 16)
@@ -16134,25 +14634,19 @@ pub mod ble {
 
         /// ACTSCANCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Actscancntl(pub u32);
-
-        impl Default for Actscancntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Actscancntl {
             /// UPPERLIMIT — 9 bits (offset 0)
             #[inline(always)]
             pub const fn upperlimit(&self) -> u16 {
-                ((self.0 >> 0) & 0x1FF) as u16
+                (self.0 & 0x1FF) as u16
             }
 
             #[inline(always)]
             pub fn set_upperlimit(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x1FF << 0)) | ((val as u32 & 0x1FF) << 0);
+                self.0 = (self.0 & !0x1FF) | (val as u32 & 0x1FF);
             }
 
             /// BACKOFF — 9 bits (offset 16)
@@ -16169,25 +14663,19 @@ pub mod ble {
 
         /// WPALCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Wpalcntl(pub u32);
-
-        impl Default for Wpalcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Wpalcntl {
             /// WPALBASEPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn wpalbaseptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_wpalbaseptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// WPALNBDEV — 8 bits (offset 16)
@@ -16204,73 +14692,55 @@ pub mod ble {
 
         /// WPALCURRENTPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Wpalcurrentptr(pub u32);
-
-        impl Default for Wpalcurrentptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Wpalcurrentptr {
             /// WPALCURRENTPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn wpalcurrentptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_wpalcurrentptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// SEARCH_TIMEOUT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct SearchTimeout(pub u32);
-
-        impl Default for SearchTimeout {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl SearchTimeout {
             /// SEARCH_TIMEOUT — 6 bits (offset 0)
             #[inline(always)]
             pub const fn search_timeout(&self) -> u8 {
-                ((self.0 >> 0) & 0x3F) as u8
+                (self.0 & 0x3F) as u8
             }
 
             #[inline(always)]
             pub fn set_search_timeout(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x3F << 0)) | ((val as u32 & 0x3F) << 0);
+                self.0 = (self.0 & !0x3F) | (val as u32 & 0x3F);
             }
         }
 
         /// COEXIFCNTL0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Coexifcntl0(pub u32);
-
-        impl Default for Coexifcntl0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Coexifcntl0 {
             /// WLANCOEX_EN — 1 bit (offset 0)
             #[inline(always)]
             pub const fn wlancoex_en(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_wlancoex_en(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// SYNCGEN_EN — 1 bit (offset 1)
@@ -16408,25 +14878,19 @@ pub mod ble {
 
         /// COEXIFCNTL1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Coexifcntl1(pub u32);
-
-        impl Default for Coexifcntl1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Coexifcntl1 {
             /// WLCPDELAY — 7 bits (offset 0)
             #[inline(always)]
             pub const fn wlcpdelay(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_wlcpdelay(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// WLCPDURATION — 7 bits (offset 8)
@@ -16465,25 +14929,19 @@ pub mod ble {
 
         /// COEXIFCNTL2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Coexifcntl2(pub u32);
-
-        impl Default for Coexifcntl2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Coexifcntl2 {
             /// TX_ANT_DELAY — 4 bits (offset 0)
             #[inline(always)]
             pub const fn tx_ant_delay(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_tx_ant_delay(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// RX_ANT_DELAY — 4 bits (offset 8)
@@ -16500,25 +14958,19 @@ pub mod ble {
 
         /// BLEMPRIO0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Blemprio0(pub u32);
-
-        impl Default for Blemprio0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Blemprio0 {
             /// BLEM0 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn blem0(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_blem0(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// BLEM1 — 4 bits (offset 4)
@@ -16601,25 +15053,19 @@ pub mod ble {
 
         /// BLEMPRIO1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Blemprio1(pub u32);
-
-        impl Default for Blemprio1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Blemprio1 {
             /// BLEM8 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn blem8(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_blem8(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// BLEM9 — 4 bits (offset 4)
@@ -16702,25 +15148,19 @@ pub mod ble {
 
         /// BLEMPRIO2
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Blemprio2(pub u32);
-
-        impl Default for Blemprio2 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Blemprio2 {
             /// BLEM16 — 4 bits (offset 0)
             #[inline(always)]
             pub const fn blem16(&self) -> u8 {
-                ((self.0 >> 0) & 0xF) as u8
+                (self.0 & 0xF) as u8
             }
 
             #[inline(always)]
             pub fn set_blem16(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xF << 0)) | ((val as u32 & 0xF) << 0);
+                self.0 = (self.0 & !0xF) | (val as u32 & 0xF);
             }
 
             /// BLEM17 — 4 bits (offset 4)
@@ -16759,25 +15199,19 @@ pub mod ble {
 
         /// RALCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Ralcntl(pub u32);
-
-        impl Default for Ralcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Ralcntl {
             /// RALBASEPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn ralbaseptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_ralbaseptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
 
             /// RALNBDEV — 8 bits (offset 16)
@@ -16794,97 +15228,73 @@ pub mod ble {
 
         /// RALCURRENTPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Ralcurrentptr(pub u32);
-
-        impl Default for Ralcurrentptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Ralcurrentptr {
             /// RALCURRENTPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn ralcurrentptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_ralcurrentptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// RAL_LOCAL_RND
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct RalLocalRnd(pub u32);
-
-        impl Default for RalLocalRnd {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl RalLocalRnd {
             /// LRND_VAL — 22 bits (offset 0)
             #[inline(always)]
             pub const fn lrnd_val(&self) -> u32 {
-                ((self.0 >> 0) & 0x3FFFFF) as u32
+                self.0 & 0x3FFFFF
             }
 
             #[inline(always)]
             pub fn set_lrnd_val(&mut self, val: u32) {
-                self.0 = (self.0 & !(0x3FFFFF << 0)) | ((val as u32 & 0x3FFFFF) << 0);
+                self.0 = (self.0 & !0x3FFFFF) | (val & 0x3FFFFF);
             }
         }
 
         /// RAL_PEER_RND
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct RalPeerRnd(pub u32);
-
-        impl Default for RalPeerRnd {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl RalPeerRnd {
             /// PRND_VAL — 22 bits (offset 0)
             #[inline(always)]
             pub const fn prnd_val(&self) -> u32 {
-                ((self.0 >> 0) & 0x3FFFFF) as u32
+                self.0 & 0x3FFFFF
             }
 
             #[inline(always)]
             pub fn set_prnd_val(&mut self, val: u32) {
-                self.0 = (self.0 & !(0x3FFFFF << 0)) | ((val as u32 & 0x3FFFFF) << 0);
+                self.0 = (self.0 & !0x3FFFFF) | (val & 0x3FFFFF);
             }
         }
 
         /// DFCNTL0_1US
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfcntl01us(pub u32);
-
-        impl Default for Dfcntl01us {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfcntl01us {
             /// TXSWSTINST0_1US — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txswstinst0_1us(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txswstinst0_1us(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// RXSWSTINST0_1US — 8 bits (offset 16)
@@ -16912,25 +15322,19 @@ pub mod ble {
 
         /// DFCNTL0_2US
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfcntl02us(pub u32);
-
-        impl Default for Dfcntl02us {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfcntl02us {
             /// TXSWSTINST0_2US — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txswstinst0_2us(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txswstinst0_2us(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// RXSWSTINST0_2US — 8 bits (offset 16)
@@ -16958,25 +15362,19 @@ pub mod ble {
 
         /// DFCNTL1_1US
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfcntl11us(pub u32);
-
-        impl Default for Dfcntl11us {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfcntl11us {
             /// TXSWSTINST1_1US — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txswstinst1_1us(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txswstinst1_1us(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// RXSWSTINST1_1US — 8 bits (offset 16)
@@ -17004,25 +15402,19 @@ pub mod ble {
 
         /// DFCNTL1_2US
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfcntl12us(pub u32);
-
-        impl Default for Dfcntl12us {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfcntl12us {
             /// TXSWSTINST1_2US — 8 bits (offset 0)
             #[inline(always)]
             pub const fn txswstinst1_2us(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_txswstinst1_2us(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// RXSWSTINST1_2US — 8 bits (offset 16)
@@ -17050,49 +15442,37 @@ pub mod ble {
 
         /// DFCURRENTPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfcurrentptr(pub u32);
-
-        impl Default for Dfcurrentptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfcurrentptr {
             /// DFCURRENTPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn dfcurrentptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_dfcurrentptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// DFANTCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfantcntl(pub u32);
-
-        impl Default for Dfantcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfantcntl {
             /// TXPRIMANTID — 7 bits (offset 0)
             #[inline(always)]
             pub const fn txprimantid(&self) -> u8 {
-                ((self.0 >> 0) & 0x7F) as u8
+                (self.0 & 0x7F) as u8
             }
 
             #[inline(always)]
             pub fn set_txprimantid(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x7F << 0)) | ((val as u32 & 0x7F) << 0);
+                self.0 = (self.0 & !0x7F) | (val as u32 & 0x7F);
             }
 
             /// TXPRIMIDCNTLEN — 1 bit (offset 7)
@@ -17131,25 +15511,19 @@ pub mod ble {
 
         /// DFIFCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Dfifcntl(pub u32);
-
-        impl Default for Dfifcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Dfifcntl {
             /// SYMBOL_ORDER — 1 bit (offset 0)
             #[inline(always)]
             pub const fn symbol_order(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_symbol_order(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// MSB_LSB_ORDER — 1 bit (offset 1)
@@ -17210,25 +15584,19 @@ pub mod ble {
 
         /// FREQSELCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Freqselcntl(pub u32);
-
-        impl Default for Freqselcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Freqselcntl {
             /// FREQSEL_START — 1 bit (offset 0)
             #[inline(always)]
             pub const fn freqsel_start(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_freqsel_start(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// FREQSEL_MODE — 1 bit (offset 1)
@@ -17256,49 +15624,37 @@ pub mod ble {
 
         /// FREQSELPTR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Freqselptr(pub u32);
-
-        impl Default for Freqselptr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Freqselptr {
             /// FREQSELPTR — 14 bits (offset 0)
             #[inline(always)]
             pub const fn freqselptr(&self) -> u16 {
-                ((self.0 >> 0) & 0x3FFF) as u16
+                (self.0 & 0x3FFF) as u16
             }
 
             #[inline(always)]
             pub fn set_freqselptr(&mut self, val: u16) {
-                self.0 = (self.0 & !(0x3FFF << 0)) | ((val as u32 & 0x3FFF) << 0);
+                self.0 = (self.0 & !0x3FFF) | (val as u32 & 0x3FFF);
             }
         }
 
         /// FREQSEL_CS1_SEED
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct FreqselCs1Seed(pub u32);
-
-        impl Default for FreqselCs1Seed {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl FreqselCs1Seed {
             /// FREQSEL_HOPINT — 5 bits (offset 0)
             #[inline(always)]
             pub const fn freqsel_hopint(&self) -> u8 {
-                ((self.0 >> 0) & 0x1F) as u8
+                (self.0 & 0x1F) as u8
             }
 
             #[inline(always)]
             pub fn set_freqsel_hopint(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x1F << 0)) | ((val as u32 & 0x1F) << 0);
+                self.0 = (self.0 & !0x1F) | (val as u32 & 0x1F);
             }
 
             /// FREQSEL_LAST_CHIDX — 6 bits (offset 16)
@@ -17315,25 +15671,19 @@ pub mod ble {
 
         /// FREQSEL_CS2_SEED
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct FreqselCs2Seed(pub u32);
-
-        impl Default for FreqselCs2Seed {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl FreqselCs2Seed {
             /// FREQSEL_EVTCNT — 16 bits (offset 0)
             #[inline(always)]
             pub const fn freqsel_evtcnt(&self) -> u16 {
-                ((self.0 >> 0) & 0xFFFF) as u16
+                (self.0 & 0xFFFF) as u16
             }
 
             #[inline(always)]
             pub fn set_freqsel_evtcnt(&mut self, val: u16) {
-                self.0 = (self.0 & !(0xFFFF << 0)) | ((val as u32 & 0xFFFF) << 0);
+                self.0 = (self.0 & !0xFFFF) | (val as u32 & 0xFFFF);
             }
 
             /// CHANNEL_IDENTIFIER — 16 bits (offset 16)
@@ -17350,14 +15700,8 @@ pub mod ble {
 
         /// FREQSEL_LLCHMAP0
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct FreqselLlchmap0(pub u32);
-
-        impl Default for FreqselLlchmap0 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl FreqselLlchmap0 {
             /// FREQSEL_LLCHMAP0 — 32 bits (offset 0)
@@ -17374,49 +15718,37 @@ pub mod ble {
 
         /// FREQSEL_LLCHMAP1
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct FreqselLlchmap1(pub u32);
-
-        impl Default for FreqselLlchmap1 {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl FreqselLlchmap1 {
             /// FREQSEL_LLCHMAP1 — 5 bits (offset 0)
             #[inline(always)]
             pub const fn freqsel_llchmap1(&self) -> u8 {
-                ((self.0 >> 0) & 0x1F) as u8
+                (self.0 & 0x1F) as u8
             }
 
             #[inline(always)]
             pub fn set_freqsel_llchmap1(&mut self, val: u8) {
-                self.0 = (self.0 & !(0x1F << 0)) | ((val as u32 & 0x1F) << 0);
+                self.0 = (self.0 & !0x1F) | (val as u32 & 0x1F);
             }
         }
 
         /// ISOCNTCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isocntcntl(pub u32);
-
-        impl Default for Isocntcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isocntcntl {
             /// ISOCORRMODE — 1 bit (offset 0)
             #[inline(always)]
             pub const fn isocorrmode(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_isocorrmode(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
 
             /// ISO_PHASE_SHIFT_MODE — 1 bit (offset 1)
@@ -17466,14 +15798,8 @@ pub mod ble {
 
         /// ISOCNTSAMP
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isocntsamp(pub u32);
-
-        impl Default for Isocntsamp {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isocntsamp {
             /// ISOCNTSAMP — 32 bits (offset 0)
@@ -17490,14 +15816,8 @@ pub mod ble {
 
         /// ISOCNTCORR
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isocntcorr(pub u32);
-
-        impl Default for Isocntcorr {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isocntcorr {
             /// ISOCNTCORR — 32 bits (offset 0)
@@ -17514,121 +15834,91 @@ pub mod ble {
 
         /// ISOCNTCORR_HUS
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct IsocntcorrHus(pub u32);
-
-        impl Default for IsocntcorrHus {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl IsocntcorrHus {
             /// ISOCNTCORR_HUS — 1 bit (offset 0)
             #[inline(always)]
             pub const fn isocntcorr_hus(&self) -> bool {
-                (self.0 >> 0) & 0x1 != 0
+                self.0 & 0x1 != 0
             }
 
             #[inline(always)]
             pub fn set_isocntcorr_hus(&mut self, val: bool) {
-                self.0 = (self.0 & !(0x1 << 0)) | ((val as u32) << 0);
+                self.0 = (self.0 & !0x1) | (val as u32);
             }
         }
 
         /// ISOINTCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isointcntl(pub u32);
-
-        impl Default for Isointcntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isointcntl {
             /// ISOINTMSK — 8 bits (offset 0)
             #[inline(always)]
             pub const fn isointmsk(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_isointmsk(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
         }
 
         /// ISOINTSTAT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isointstat(pub u32);
-
-        impl Default for Isointstat {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isointstat {
             /// ISOINTSTAT — 8 bits (offset 0)
             #[inline(always)]
             pub const fn isointstat(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_isointstat(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
         }
 
         /// ISOINTACK
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isointack(pub u32);
-
-        impl Default for Isointack {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isointack {
             /// ISOINTACK — 8 bits (offset 0)
             #[inline(always)]
             pub const fn isointack(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_isointack(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
         }
 
         /// ISOGPIOCNTL
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isogpiocntl(pub u32);
-
-        impl Default for Isogpiocntl {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isogpiocntl {
             /// ISOGPIOMSK — 8 bits (offset 0)
             #[inline(always)]
             pub const fn isogpiomsk(&self) -> u8 {
-                ((self.0 >> 0) & 0xFF) as u8
+                (self.0 & 0xFF) as u8
             }
 
             #[inline(always)]
             pub fn set_isogpiomsk(&mut self, val: u8) {
-                self.0 = (self.0 & !(0xFF << 0)) | ((val as u32 & 0xFF) << 0);
+                self.0 = (self.0 & !0xFF) | (val as u32 & 0xFF);
             }
 
             /// ISOGPIOBEH — 1 bit (offset 31)
@@ -17645,14 +15935,8 @@ pub mod ble {
 
         /// ISOTIMERTGT
         #[repr(transparent)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Copy, Clone, Default, Eq, PartialEq)]
         pub struct Isotimertgt(pub u32);
-
-        impl Default for Isotimertgt {
-            fn default() -> Self {
-                Self(0)
-            }
-        }
 
         impl Isotimertgt {
             /// ISOTIMERTGT — 32 bits (offset 0)

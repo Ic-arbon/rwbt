@@ -217,6 +217,52 @@ mod gen {
         }
     }
 
+    // --- Getter/Setter expression helpers ---
+
+    fn getter_expr(width: u32, offset: u32, mask: u32, ftype: &str) -> String {
+        if width == 1 {
+            if offset == 0 {
+                "self.0 & 0x1 != 0".into()
+            } else {
+                format!("(self.0 >> {offset}) & 0x1 != 0")
+            }
+        } else if width == 32 && offset == 0 {
+            "self.0".into()
+        } else if offset == 0 {
+            if ftype == "u32" {
+                format!("self.0 & 0x{mask:X}")
+            } else {
+                format!("(self.0 & 0x{mask:X}) as {ftype}")
+            }
+        } else if ftype == "u32" {
+            format!("(self.0 >> {offset}) & 0x{mask:X}")
+        } else {
+            format!("((self.0 >> {offset}) & 0x{mask:X}) as {ftype}")
+        }
+    }
+
+    fn setter_expr(width: u32, offset: u32, mask: u32, ftype: &str) -> String {
+        if width == 1 {
+            if offset == 0 {
+                "self.0 = (self.0 & !0x1) | (val as u32);".into()
+            } else {
+                format!("self.0 = (self.0 & !(0x1 << {offset})) | ((val as u32) << {offset});")
+            }
+        } else if width == 32 && offset == 0 {
+            "self.0 = val;".into()
+        } else if offset == 0 {
+            if ftype == "u32" {
+                format!("self.0 = (self.0 & !0x{mask:X}) | (val & 0x{mask:X});")
+            } else {
+                format!("self.0 = (self.0 & !0x{mask:X}) | (val as u32 & 0x{mask:X});")
+            }
+        } else if ftype == "u32" {
+            format!("self.0 = (self.0 & !(0x{mask:X} << {offset})) | ((val & 0x{mask:X}) << {offset});")
+        } else {
+            format!("self.0 = (self.0 & !(0x{mask:X} << {offset})) | ((val as u32 & 0x{mask:X}) << {offset});")
+        }
+    }
+
     // --- Code generation ---
 
     fn generate_block(output: &mut String, csv_path: &Path, block_name: &str, doc: &str) {
@@ -241,6 +287,12 @@ mod gen {
 
         // Block impl
         writeln!(output, "    impl {block_name} {{").unwrap();
+        writeln!(output, "        /// # Safety").unwrap();
+        writeln!(
+            output,
+            "        /// `ptr` must point to a valid {doc} register block."
+        )
+        .unwrap();
         writeln!(output, "        #[inline(always)]").unwrap();
         writeln!(
             output,
@@ -325,12 +377,8 @@ mod gen {
             writeln!(output).unwrap();
             writeln!(output, "        /// {}", reg.name).unwrap();
             writeln!(output, "        #[repr(transparent)]").unwrap();
-            writeln!(output, "        #[derive(Copy, Clone, Eq, PartialEq)]").unwrap();
+            writeln!(output, "        #[derive(Copy, Clone, Default, Eq, PartialEq)]").unwrap();
             writeln!(output, "        pub struct {type_name}(pub u32);").unwrap();
-            writeln!(output).unwrap();
-            writeln!(output, "        impl Default for {type_name} {{").unwrap();
-            writeln!(output, "            fn default() -> Self {{ Self(0) }}").unwrap();
-            writeln!(output, "        }}").unwrap();
             writeln!(output).unwrap();
             writeln!(output, "        impl {type_name} {{").unwrap();
 
@@ -341,106 +389,34 @@ mod gen {
                 let offset = field.offset;
 
                 // Getter
-                if field.width == 1 {
-                    writeln!(output).unwrap();
-                    writeln!(
-                        output,
-                        "            /// {name} — 1 bit (offset {offset})",
-                        name = field.name
-                    )
-                    .unwrap();
-                    writeln!(output, "            #[inline(always)]").unwrap();
-                    writeln!(
-                        output,
-                        "            pub const fn {fname}(&self) -> bool {{"
-                    )
-                    .unwrap();
-                    writeln!(
-                        output,
-                        "                (self.0 >> {offset}) & 0x1 != 0"
-                    )
-                    .unwrap();
-                    writeln!(output, "            }}").unwrap();
-                } else if field.width == 32 && offset == 0 {
-                    writeln!(output).unwrap();
-                    writeln!(
-                        output,
-                        "            /// {name} — {width} bits (offset {offset})",
-                        name = field.name,
-                        width = field.width
-                    )
-                    .unwrap();
-                    writeln!(output, "            #[inline(always)]").unwrap();
-                    writeln!(
-                        output,
-                        "            pub const fn {fname}(&self) -> {ftype} {{"
-                    )
-                    .unwrap();
-                    writeln!(output, "                self.0").unwrap();
-                    writeln!(output, "            }}").unwrap();
-                } else {
-                    writeln!(output).unwrap();
-                    writeln!(
-                        output,
-                        "            /// {name} — {width} bits (offset {offset})",
-                        name = field.name,
-                        width = field.width
-                    )
-                    .unwrap();
-                    writeln!(output, "            #[inline(always)]").unwrap();
-                    writeln!(
-                        output,
-                        "            pub const fn {fname}(&self) -> {ftype} {{"
-                    )
-                    .unwrap();
-                    writeln!(
-                        output,
-                        "                ((self.0 >> {offset}) & 0x{mask:X}) as {ftype}"
-                    )
-                    .unwrap();
-                    writeln!(output, "            }}").unwrap();
-                }
+                writeln!(output).unwrap();
+                writeln!(
+                    output,
+                    "            /// {name} — {width} bit{s} (offset {offset})",
+                    name = field.name,
+                    width = field.width,
+                    s = if field.width == 1 { "" } else { "s" }
+                )
+                .unwrap();
+                writeln!(output, "            #[inline(always)]").unwrap();
+                writeln!(
+                    output,
+                    "            pub const fn {fname}(&self) -> {ftype} {{"
+                )
+                .unwrap();
+                writeln!(output, "                {}", getter_expr(field.width, offset, mask, ftype)).unwrap();
+                writeln!(output, "            }}").unwrap();
 
                 // Setter
-                if field.width == 1 {
-                    writeln!(output).unwrap();
-                    writeln!(output, "            #[inline(always)]").unwrap();
-                    writeln!(
-                        output,
-                        "            pub fn set_{fname}(&mut self, val: bool) {{"
-                    )
-                    .unwrap();
-                    writeln!(
-                        output,
-                        "                self.0 = (self.0 & !(0x1 << {offset})) | ((val as u32) << {offset});"
-                    )
-                    .unwrap();
-                    writeln!(output, "            }}").unwrap();
-                } else if field.width == 32 && offset == 0 {
-                    writeln!(output).unwrap();
-                    writeln!(output, "            #[inline(always)]").unwrap();
-                    writeln!(
-                        output,
-                        "            pub fn set_{fname}(&mut self, val: {ftype}) {{"
-                    )
-                    .unwrap();
-                    writeln!(output, "                self.0 = val;").unwrap();
-                    writeln!(output, "            }}").unwrap();
-                } else {
-                    writeln!(output).unwrap();
-                    writeln!(output, "            #[inline(always)]").unwrap();
-                    writeln!(
-                        output,
-                        "            pub fn set_{fname}(&mut self, val: {ftype}) {{"
-                    )
-                    .unwrap();
-                    writeln!(
-                        output,
-                        "                self.0 = (self.0 & !(0x{mask:X} << {offset})) | ((val as u32 & 0x{mask:X}) << {offset});"
-                    )
-                    .unwrap();
-                    writeln!(output, "            }}").unwrap();
-                }
+                writeln!(output).unwrap();
+                writeln!(output, "            #[inline(always)]").unwrap();
+                writeln!(
+                    output,
+                    "            pub fn set_{fname}(&mut self, val: {ftype}) {{"
+                )
+                .unwrap();
+                writeln!(output, "                {}", setter_expr(field.width, offset, mask, ftype)).unwrap();
+                writeln!(output, "            }}").unwrap();
             }
 
             writeln!(output, "        }}").unwrap();
