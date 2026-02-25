@@ -114,6 +114,27 @@ impl CmdBuilder {
         self.len == 0
     }
 
+    /// Number of packed u32 words.
+    #[inline]
+    pub fn packed_word_count(&self) -> usize {
+        (self.len + 1) / 2
+    }
+
+    /// Byte length when packed.
+    #[inline]
+    pub fn byte_len(&self) -> usize {
+        self.packed_word_count() * 4
+    }
+
+    /// Get packed u32 word at index. Panics if out of range.
+    #[inline]
+    pub fn packed_word(&self, index: usize) -> u32 {
+        assert!(index < self.packed_word_count());
+        let lo = self.buf[index * 2] as u32;
+        let hi = self.buf[index * 2 + 1] as u32;
+        lo | (hi << 16)
+    }
+
     /// Write the command sequence to RFC SRAM.
     ///
     /// - `base`: RFC SRAM base address (e.g., `0x4008_2000` on SiFli).
@@ -125,6 +146,7 @@ impl CmdBuilder {
     ///
     /// Caller must ensure `base + offset` points to valid RFC SRAM and that
     /// the sequence fits within the SRAM region.
+    #[deprecated(note = "use packed_word() + MemRegion for bounds-checked writes")]
     pub unsafe fn write_to_sram(&self, base: u32, offset: u32) -> u32 {
         let mut addr = offset;
         for i in (0..self.len).step_by(2) {
